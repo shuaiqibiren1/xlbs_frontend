@@ -77,11 +77,11 @@
             <ResourceCardList :resourcePathList="resourcePathList" @clickResourcePath="handleResourceClick" />
           </div>
 
-            <CardList
-            v-if="userInfo.identity === 'doctor'"
-            :cards="cardData"
-            @card-click="handleCardClick"
-            />
+          <CardList
+          v-if="userInfo.identity === 'doctor'"
+          :cards="cardData"
+          @card-click="handleCardClick"
+          />
 
               <div class="container">
                 <div>
@@ -250,7 +250,7 @@ import UserInfoForm from '@/components/common/UserInfoForm.vue';
 import ImageDisplay from '@/components/common/ImageDisplay.vue';
 import CarAnimation from '@/components/common/CarAnimation.vue';
 import { useStore } from 'vuex';
-import CardList from '@/components/CardList.vue'; // 确保路径正确
+import CardList from '@/components/cardList.vue'; // 确保路径正确
 import { ElDialog, ElButton } from 'element-plus';
 import IU from '@/assets/iu.png';
 import { ElMessage } from 'element-plus'

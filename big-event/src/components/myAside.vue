@@ -95,7 +95,7 @@
         <button @click="handleGeneratePDF" class="generate-button">生成并展示心脏诊疗报告</button>  
 
       </div> -->
-        <div v-if="asideshow.wenxin" 
+    <div v-if="asideshow.wenxin" 
        style="padding: 15px; border-radius: 10px; animation: hideToShow 1s ease-in-out"
        class="shadow-box background-opacity wow">
     <div style="color: var(--lightGreen); font-size: 20px; font-weight: bold; margin-bottom: 10px" 

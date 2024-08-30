@@ -6,6 +6,7 @@ import HomeVue from '@/components/home.vue'
 import DemoVue from '@/components/demo.vue'
 import UserVue from '@/components/user.vue'
 import ChatVue from '@/components/gpt.vue'
+import NiiVue from '@/components/niishow.vue'
 import usePatientsInfoStore from '@/stores/patients.js'
 
 
@@ -18,6 +19,7 @@ const routes = [
             { path: '/demo', component: DemoVue },
             { path: '/home', component: UserVue },
             { path: '/chat', component: ChatVue },
+            { path: '/display', component: NiiVue },
         ]
         // { path: '/', component: LayoutVue, ... }: 这是另一个路由对象，它定义了根路径 / 的路由。这里使用的 LayoutVue 组件通常是一个包含应用布局的主组件。
         // redirect: '/article/manage': 这表示当用户访问根路径 / 时，应用将会自动重定向到 /article/manage 路径。

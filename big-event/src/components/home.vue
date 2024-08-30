@@ -280,13 +280,18 @@ const handleCommand = (command)=>{
               </div>
             </li>
 
+            <li @click="router.push({path: '/display'})">
+              <div class="my-menu">
+                🔍 <span>NiiVueViewer</span>
+              </div>
+            </li>
+
             
             <li @click="router.push({path: '/chat'})">
               <div class="my-menu">
                 🤖 <span>chat</span>
               </div>
             </li>
-            
 
             <el-dropdown :hide-timeout="500" placement="bottom-end" @command="handleCommand">
                 <li>

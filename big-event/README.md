@@ -27,3 +27,9 @@ npm run dev
 ```sh
 npm run build
 ```
+
+```sh
+pnpm set registry https://registry.npmmirror.com   
+```
+npm install --only=prod @niivue/niivue
+
