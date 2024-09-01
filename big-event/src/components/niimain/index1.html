@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>NiiVue</title>
+  <link rel="stylesheet" href="light.css" />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+</head>
+
+<body>
+  <noscript>
+    <strong>niivue requires JavaScript.</strong>
+  </noscript>
+  <header>
+
+    <select id="sliceType">
+      <option value="4">Render</option>
+      <option value="3" selected>A+C+S+R</option>
+    </select>
+    Save the current scene as HTML
+    <button id="save">Save as HTML</button>
+
+    <label for="check1">Background</label>
+    <input type="checkbox" id="check1" checked />
+    <label for="check2">Mask</label>
+    <input type="checkbox" id="check2" unchecked />
+    <label for="check3">Smooth</label>
+    <input type="checkbox" id="check3" checked />
+    <label for="alphaSlider">Opacity</label>
+    <input type="range" min="1" max="255" value="127" class="slider" id="alphaSlider" />
+  </header>
+
+  <main>
+    <canvas id="gl1"></canvas>
+  </main>
+
+  <footer>&nbsp;
+    <label id="location"></label>
+    <p>
+      <textarea id="scriptText" name="customText" rows="8"
+        cols="60">let cmap = {&#10; R: [0,   0, 120, 175],&#10; G: [0,  90,  60, 185],&#10; B: [0, 120,  60, 175],&#10; labels: ["air","CSF","gray","white"],&#10;};</textarea>
+      &nbsp;<button id="custom">Apply</button>&nbsp;
+  </footer>
+
+  <script type="module" async>
+    import * as niivue from "@niivue/niivue";
+
+    var slider = document.getElementById("alphaSlider");
+    slider.oninput = function () {
+      nv1.setOpacity(1, this.value / 255);
+    };
+    var check1 = document.getElementById("check1");
+    check1.onclick = function (event) {
+      nv1.volumes[0].opacity = this.checked;
+      nv1.updateGLVolume();
+    };
+    var check2 = document.getElementById("check2");
+    check2.onclick = function (event) {
+      nv1.isAlphaClipDark = this.checked;
+      nv1.updateGLVolume();
+    };
+    var check3 = document.getElementById("check3");
+    check3.onclick = function (event) {
+      nv1.setInterpolation(!this.checked);
+    };
+    function handleLocationChange(data) {
+      document.getElementById("location").innerHTML =
+        "&nbsp;&nbsp;" + data.string;
+    }
+    var btn = document.getElementById("custom");
+    btn.onclick = function (event) {
+      var val = document.getElementById("scriptText").value;
+      val += ';nv1.volumes[1].setColormapLabel(cmap);nv1.updateGLVolume();';
+      val && eval(val);
+    }
+    let defaults = {
+      logging: false,
+      dragAndDropEnabled: true,
+      backColor: [0.3, 0.3, 0.3, 1],
+      show3Dcrosshair: true,
+      onLocationChange: handleLocationChange,
+    };
+    var nv1 = new niivue.Niivue(defaults);
+    nv1.setRadiologicalConvention(false);
+    nv1.attachTo("gl1");
+
+    function saveAsHtml() {
+      nv1.saveHTML("labels.html", "gl1", decodeURIComponent(esm));
+    }
+
+    function setSliceType() {
+      let st = parseInt(document.getElementById("sliceType").value);
+      nv1.setSliceType(st);
+    }
+
+    var volumeList1 = [
+      {
+        url: "https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/heart2.nii.gz",
+        colormap: "red",
+      },//心脏
+      {
+        url: "https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/heart2.nii.gz",
+        colormap: "green",
+        opacity: 0.5,
+      },//疤痕
+    ];
+    await nv1.loadVolumes(volumeList1);
+    nv1.opts.multiplanarShowRender = niivue.SHOW_RENDER.ALWAYS;
+    nv1.setSliceType(nv1.sliceTypeMultiplanar);
+    nv1.graph.autoSizeMultiplanar = true;
+    nv1.updateGLVolume(); //apply labeled colormap
+    btn.click();
+
+    // assign our event handler
+    var button = document.getElementById("save");
+    button.onclick = saveAsHtml;
+    var drop = document.getElementById("sliceType");
+    drop.onchange = setSliceType;
+
+    var nv1 = new niivue.Niivue();
+    nv1.opts.multiplanarShowRender = niivue.SHOW_RENDER.ALWAYS;
+    nv1.attachTo("gl1");
+    nv1.loadVolumes(volumeList1);
+    // nv1.addLabel("Label", {textScale: 2.0, textAlignment: niivue.LabelTextAlignment.CENTER}, [0.0, 0.0, 0.0]);
+    // nv1.addLabel("ventral anterior insula", {lineWidth: 3.0, textColor: [1.0, 1.0, 0.0, 1.0], lineColor: [1.0, 1.0, 0.0, 1.0]}, [[-33, 13, -7], [32, 10, -6]]);
+    nv1.addLabel("LAScar", { textColor: [0.0, 1.0, 0.0, 1.0], lineWidth: 3.0, lineColor: [0.0, 1.0, 0.0, 1.0] }, [[-38, 6, 2]]);
+    // nv1.addLabel("posterior insula", {textColor: [0.0, 0.0, 1.0, 1.0], lineWidth: 3.0, lineColor: [0.0, 0.0, 1.0, 1.0]}, [[-38, -6, 5], [35, -11, 6]]);
+    // nv1.addLabel("hippocampus", {textColor:[1, 0, 0, 1], lineWidth: 3.0, lineColor: [1, 0, 0, 1]}, [-25, -15.0, -25.0]);
+    // nv1.addLabel("right justified footnote", {textScale: 0.5, textAlignment: niivue.LabelTextAlignment.RIGHT, bulletColor: [1.0, 0.0, 1.0, 1.0], bulletScale: 0.5}, [0.0, 0.0, 0.0]);
+
+  </script>
+</body>
+
+</html>

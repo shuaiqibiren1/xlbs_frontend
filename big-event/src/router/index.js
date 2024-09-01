@@ -9,6 +9,9 @@ import ChatVue from '@/components/gpt.vue'
 import NiiVue from '@/components/niishow.vue'
 import usePatientsInfoStore from '@/stores/patients.js'
 
+import feature1 from '@/components/niimain/feature1.vue'
+import feature2 from '@/components/niimain/feature2.vue'
+import feature3 from '@/components/niimain/feature3.vue'
 
 // 定义了一组路由配置，并使用 Vue Router 创建一个路由器实例。在 Vue.js 应用中，路由用于管理不同页面（或组件）之间的导航。
 const routes = [
@@ -19,7 +22,13 @@ const routes = [
             { path: '/demo', component: DemoVue },
             { path: '/home', component: UserVue },
             { path: '/chat', component: ChatVue },
-            { path: '/display', component: NiiVue },
+            {
+                path: '/display', component: NiiVue, children: [
+                    { path: 'feature1', component: feature1 },
+                    { path: 'feature2', component: feature2 },
+                    { path: 'feature3', component: feature3 },
+                ]
+            },
         ]
         // { path: '/', component: LayoutVue, ... }: 这是另一个路由对象，它定义了根路径 / 的路由。这里使用的 LayoutVue 组件通常是一个包含应用布局的主组件。
         // redirect: '/article/manage': 这表示当用户访问根路径 / 时，应用将会自动重定向到 /article/manage 路径。
