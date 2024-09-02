@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <div class="content">
     <h1>
       NiiVue supports multiuser image option syncing between publishers and
       subscribers. Clone and run the
@@ -9,7 +9,7 @@
     </h1>
     <p>Click the buttons to change the color map</p>
     <div class="slidecontainer">
-      Opacity
+      <label>Opacity</label>
       <input
         type="range"
         min="0.0"
@@ -20,31 +20,33 @@
       />
     </div>
     <div>
-      <button @click="resetSession">Reset Session</button>
+      <button class="primary-button" @click="resetSession">Reset Session</button>
     </div>
-  </section>
-  <section>
-    <div id="demo1" style="width: 90%; height: 400px">
+
+    <div id="demo1" class="canvas-container">
       <canvas id="gl1" height="480" width="640"></canvas>
     </div>
-  </section>
-  <section>
-    <p>available color maps:</p>
-    <p id="colormaps">
+
+    <p>Available color maps:</p>
+    <div id="colormaps" class="colormap-buttons">
       <button
         v-for="cmap in colormaps"
         :key="cmap"
+        class="colormap-button"
         @click="changeColormap(cmap)"
       >
         {{ cmap }}
       </button>
-    </p>
-  </section>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import * as niivue from '@niivue/niivue'
+import useImageStore from '@/stores/images.js'; 
+
+const imageStore = useImageStore();
 
 const opacity = ref(1.0)
 const colormaps = ref([])
@@ -68,7 +70,8 @@ const changeColormap = (cmap) => {
 onMounted(async () => {
   const volumeList1 = [
     {
-      url: 'https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/mni152.nii.gz',
+      // url: 'https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/mni152.nii.gz',
+      url: imageStore.niiImgUrl,
       colormap: 'gray',
       opacity: 1,
       visible: true,
@@ -88,7 +91,134 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-section {
+
+.content {
   margin: 20px;
+  padding: 20px;
+  /* background-color: #f7f7f7;*/
+  background-color: var(--background);
+  color: var(--fontColor);
+  border-radius: 10px;
 }
+
+h1 {
+  font-size: 1.5em;
+  /*color: #333; */
+  margin-bottom: 10px;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p {
+  font-size: 1em;
+  /*color: #555;*/
+  margin-top: 20px;
+}
+
+.slidecontainer {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+label {
+  font-size: 1em;
+  color: #333;
+  margin-right: 10px;
+}
+
+input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #ddd;
+  outline: none;
+  border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.primary-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-top: 10px;
+}
+
+.primary-button:hover {
+  background-color: #0056b3;
+}
+
+.canvas-container {
+  width: 100%;
+  height: 400px;
+  margin: 20px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+
+.colormap-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/*
+.colormap-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.colormap-button:hover {
+  background-color: #ddd;
+  border-color: #bbb;
+}
+*/
+
+.colormap-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif; /* 应用Poppins字体 */
+}
+
+.colormap-button:hover {
+  background-color: #5d82e0;
+}
+
+.colormap-button:active {
+  background-color: #004085;
+  transform: scale(0.98);
+}
+
 </style>

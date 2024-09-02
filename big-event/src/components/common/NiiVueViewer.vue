@@ -1,77 +1,134 @@
 <template>
-  <div id="app">
-    <h1>Select a Feature1</h1>
-    <button @click="navigateToHtmlPage1" type="button">Go to HTML Page</button>
+  <div id="app" class="container">
+    <div class="feature-section">
+      <h1>Select a Feature1</h1>
+      <button @click="navigateToHtmlPage('1')" type="button" class="styled-button">Go to HTML Page</button>
+    </div>
+
+    <div class="feature-section">
+      <h1>Select a Feature2</h1>
+      <button @click="navigateToHtmlPage('2')" type="button" class="styled-button">Go to HTML Page</button>
+    </div>
+
+    <div class="feature-section">
+      <h1>Select a Feature3</h1>
+      <button @click="navigateToHtmlPage('3')" type="button" class="styled-button">Go to HTML Page</button>
+    </div>
+
   </div>
 
+  <el-upload
+    class="upload-area"
+    drag
+    action="/api/niiupload"
+    :multiple="true"
+    :show-file-list="true"
+    :headers="{'Authorization': tokenStore.token}"
+    @change="handleChange"
+    @success="handleSuccess"
+    @error="handleError"
+  >
+    <i class="el-icon-upload"></i>
+    <div class="el-upload__text">Drop files here or click to upload</div>
+  </el-upload>
 
-  <div id="app">
-    <h1>Select a Feature2</h1>
-    <button @click="navigateToHtmlPage2" type="button">Go to HTML Page</button>
-  </div>
-
-  
-  <div id="app">
-    <h1>Select a Feature3</h1>
-    <button @click="navigateToHtmlPage3" type="button">Go to HTML Page</button>
-  </div>
-
-  <div>
+  <div class="feature-section">
     <h1>NiiVue Component</h1>
     
     <!-- 按钮组 -->
-    <div>
-      <button @click="navigateTo('feature1')">Go to Feature 1</button>
-      <button @click="navigateTo('feature2')">Go to Feature 2</button>
-      <button @click="navigateTo('feature3')">Go to Feature 3</button>
+    <div class="button-group">
+      <button @click="navigateTo('feature1')" class="styled-button">Go to Feature 1</button>
+      <button @click="navigateTo('feature2')" class="styled-button">Go to Feature 2</button>
+      <button @click="navigateTo('feature3')" class="styled-button">Go to Feature 3</button>
     </div>
     
     <!-- 子路由内容将显示在这里 -->
     <router-view />
   </div>
-
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { Niivue, SHOW_RENDER } from '@niivue/niivue';
-import { useRouter } from 'vue-router'; // 导入 useRouter 钩子
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useTokenStore } from '@/stores/token.js';
+import useImageStore from '@/stores/images.js'; 
 
-const router = useRouter(); // 获取 router 实例
+const imageStore = useImageStore();
+const tokenStore = useTokenStore();
+const router = useRouter();
 
 const navigateTo = (feature) => {
-  console.log(feature);
   router.push(`/display/${feature}`);
 };
 
-
-function navigateToHtmlPage3() {
-  window.location.href = '/src/components/niimain/index3.html'; // 替换为你的 HTML 文件路径
+function navigateToHtmlPage(feature) {
+  window.location.href = `/src/components/niimain/index${feature}.html`;
 }
 
-function navigateToHtmlPage2() {
-  window.location.href = '/src/components/niimain/index2.html'; // 替换为你的 HTML 文件路径
-}
+const handleChange = (file, fileList) => {
+  console.log('Selected files:', fileList);
+};
 
-function navigateToHtmlPage1() {
-  window.location.href = '/src/components/niimain/index1.html'; // 替换为你的 HTML 文件路径
-}
+// 上传成功时触发
+const handleSuccess = (response, file, fileList) => {
+  console.log('Upload Response:', response)  // 调试输出
+  if (response.code === 0) {
+      imageStore.setniiImgUrl(response.data);
+      console.log('niiImgList :', JSON.stringify(imageStore.niiImgList));
+
+  } else {
+      console.error('Error fetching files:', response.message);
+  }
+};
+
+const handleError = (err, file, fileList) => {
+  console.error('Upload failed:', err);
+};
+
+// 使用参考
+// import useImageStore from '@/stores/images.js'; 
+// const imageStore = useImageStore();
+// url = imageStore.niiImgList[0]
 
 </script>
 
 <style scoped>
 .container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  padding: 20px;
   background-color: #f0f0f0;
 }
 
-canvas {
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: white;
+.feature-section {
+  margin-bottom: 20px;
+}
+
+.styled-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.styled-button:hover {
+  background-color: #45a049;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
 }
 </style>

@@ -23,7 +23,7 @@ const routes = [
             { path: '/home', component: UserVue },
             { path: '/chat', component: ChatVue },
             {
-                path: '/display', component: NiiVue, children: [
+                path: '/display', component: NiiVue, redirect: '/display/feature3', children: [
                     { path: 'feature1', component: feature1 },
                     { path: 'feature2', component: feature2 },
                     { path: 'feature3', component: feature3 },
