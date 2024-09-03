@@ -7,8 +7,8 @@ const useImageStore = defineStore('images', () => {
     // 定义状态
     const images = ref([heartimg]);
     const segImgId = ref(0);
-    const niiImgUrl = ref('https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/mni152.nii.gz');
-    // const niiImgUrl = ref('https://aircraft-1111.oss-cn-beijing.aliyuncs.com/a7e44048-f99a-4e5c-a8eb-3bec5dbfaf95_mr_train_1001_label.nii.gz');
+    // const niiImgUrl = ref('https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/mni152.nii.gz');
+    const niiImgUrl = ref('https://aircraft-1111.oss-cn-beijing.aliyuncs.com/a7e44048-f99a-4e5c-a8eb-3bec5dbfaf95_mr_train_1001_label.nii.gz');
 
     // 实时获取图片数组的计算属性
     const imageList = computed(() => images.value);

@@ -113,6 +113,10 @@ const useDocStore = defineStore('document', () => {
         images.value.push(image);
     };
 
+    const resetImage = () => {
+        images.value = [heartimg];
+    }
+
     // 生成 PDF 的函数  
     const generatePDF = async () => {
         const pdfContent = document.getElementById("pdf-content"); // 替换为你的 HTML 内容的 ID  
@@ -125,13 +129,15 @@ const useDocStore = defineStore('document', () => {
     };
 
     return {
+        images,
         heartParameters,
         suggestedAdvice,
         parsedMessage,
         fetchHeartParameters,
         fetchWenxinAdvice,
         addImage,
-        generatePDF
+        generatePDF,
+        resetImage
     };
 }, { persist: true });
 

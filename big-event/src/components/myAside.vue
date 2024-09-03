@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="myAside-container ">
       <!-- 3D模型展示 -->
       <!-- v-if="asideshow.cube" -->
@@ -69,32 +70,6 @@
           <i class="el-icon-star-off" style="margin-right: 2px"></i>{{ userInfo.email }}
         </a>
       </div>
-
-      <!-- 搜索 -->
-      <!-- <div v-if="asideshow.wenxin" style="padding: 15px;border-radius: 10px;animation: hideToShow 1s ease-in-out"
-           class="shadow-box background-opacity wow">
-        <div style="color: var(--lightGreen);font-size: 20px;font-weight: bold;margin-bottom: 10px" @click="showWenxin()">
-          文心智能助手
-        </div>
-        <div style="display: flex">
-          <input class="ais-SearchBox-input" type="text"
-                 v-model="articleSearch"
-                 placeholder="输入消息 ......" maxlength="32">
-          <div class="ais-SearchBox-submit">
-            <svg style="margin-top: 3.5px;margin-left: 18px" viewBox="0 0 1024 1024" width="20" height="20">
-              <path
-                d="M51.2 508.8c0 256.8 208 464.8 464.8 464.8s464.8-208 464.8-464.8-208-464.8-464.8-464.8-464.8 208-464.8 464.8z"
-                fill="#51C492"></path>
-              <path
-                d="M772.8 718.4c48-58.4 76.8-132.8 76.8-213.6 0-186.4-151.2-337.6-337.6-337.6-186.4 0-337.6 151.2-337.6 337.6 0 186.4 151.2 337.6 337.6 337.6 81.6 0 156-28.8 213.6-76.8L856 896l47.2-47.2-130.4-130.4zM512 776c-149.6 0-270.4-121.6-270.4-271.2S363.2 233.6 512 233.6c149.6 0 271.2 121.6 271.2 271.2C782.4 654.4 660.8 776 512 776z"
-                fill="#FFFFFF"></path>
-            </svg>
-          </div>
-        </div>
-        
-        <button @click="handleGeneratePDF" class="generate-button">生成并展示心脏诊疗报告</button>  
-
-      </div> -->
     <div v-if="asideshow.wenxin" 
        style="padding: 15px; border-radius: 10px; animation: hideToShow 1s ease-in-out"
        class="shadow-box background-opacity wow">
@@ -137,9 +112,14 @@
       </div>
     </div>
     
+    <button @click="ResetImage" class="generate-button">重置图片</button>
     <button @click="handleGeneratePDF" class="generate-button">生成并展示心脏诊疗报告</button>
+
   </div>
 
+    <!-- <div>
+      <Sider/>
+    </div> -->
 
     </div>
   </div>
@@ -155,6 +135,21 @@ import FileUpload from '@/components/common/FileUpload.vue';
 import IU from '@/assets/iu.png';
 import HEART from '@/assets/heartomg.gif';
 import ShowFile from '@/components/common/ShowFile.vue';
+import useDocStore from '@/stores/document.js';   
+import SunflowerIcon from '@/assets/Sunflower.png';
+import YitaoIcon from '@/assets/yitao.png';
+import EliIcon from '@/assets/eli.png'
+import Putao from '@/assets/putao.png'
+// 文心
+import { ChatService } from '@/api/wenxin';  
+import { marked } from 'marked'; 
+import { useStore } from 'vuex';
+const store = useStore(); 
+const visible = computed(() => store.state.visible);
+const asideshow = computed(() => store.state.asideshow);
+const docStore = useDocStore();  
+// Sider
+import Sider from '@/components/common/sider.vue'
 
 // 使用userinfo仓库
 import useUserInfoStore from '@/stores/userInfo.js'
@@ -166,75 +161,15 @@ watch(userInfo, async (newVal, oldVal) => {
   window.location.reload();
 }, { deep: true });
 
+const ResetImage = () => {
+  docStore.resetImage();
+}
+// 
 
-// three
-// let renderer;   
-// const container = ref(null);  
-// const showCube = ref(true);  
-// let cube = null;  
-
-// // 初始化3D场景的函数  
-// const initThree = () => {  
-//   const scene = new THREE.Scene();  
-//   scene.background = new THREE.Color(0xffffff);  
-//   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);  
-//   const renderer = new THREE.WebGLRenderer();  
-//   renderer.setSize(window.innerWidth, window.innerHeight);  
-//   container.value.appendChild(renderer.domElement);  
-
-//   // 添加光源  
-//   const ambientLight = new THREE.AmbientLight(0x404040);  
-//   const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);  
-//   scene.add(ambientLight);  
-//   scene.add(directionalLight);  
-
-//   camera.position.z = 5;  
-
-//   // 创建立方体  
-//   const geometry = new THREE.BoxGeometry();  
-//   const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 });  
-//   cube = new THREE.Mesh(geometry, material);  
-//   scene.add(cube);  
-
-//   // 动画循环  
-//   const animate = () => {  
-//     requestAnimationFrame(animate);  
-
-//     // 根据状态设置立方体可见性  
-//     cube.visible = showCube.value;  
-
-//     // 旋转立方体  
-//     cube.rotation.x += 0.01;  
-//     cube.rotation.y += 0.01;  
-
-//     renderer.render(scene, camera);  
-//   };  
-
-//   animate();  
-// };  
-
-// // 切换立方体的可见性  
-// const toggleCube = () => {  
-//   showCube.value = !showCube.value;  
-// };  
-
-
-
-// const dispose = () => {  
-//   // 清理资源  
-//   if (renderer) {  
-//     renderer.dispose();  
-//   }  
-// };
-// 立方体
 
 // tool
 const openedMenus = ref(0); // 当前打开的菜单  
 const activeButton = ref(null); 
-import SunflowerIcon from '@/assets/Sunflower.png';
-import YitaoIcon from '@/assets/yitao.png';
-import EliIcon from '@/assets/eli.png'
-import Putao from '@/assets/putao.png'
 
 const cards = [
   {
@@ -311,10 +246,7 @@ const isMobile = computed(() => {
   return window.innerWidth <= 768;
 });
 
-import { useStore } from 'vuex';
-const store = useStore(); 
-const visible = computed(() => store.state.visible);
-const asideshow = computed(() => store.state.asideshow);
+
 // userpart-over
 
 // showdiaWindows
@@ -337,23 +269,15 @@ onMounted(() => {
   });
 });
 
-// onBeforeUnmount(() => {  
-//   dispose();  
-// });  
 
 // 生成诊断报告
-import useDocStore from '@/stores/document.js';   
-
-const docStore = useDocStore();  
 
 const handleGeneratePDF = async () => {
     console.log("generate pdf");   
     await docStore.generatePDF();  
 };  
 
-// 文心
-import { ChatService } from '@/api/wenxin';  
-import { marked } from 'marked'; 
+
 
 const userInput = ref('');  
 const messages = ref([]);  
@@ -390,6 +314,7 @@ const sendMessage = async () => {
 }
 
 .message-list {
+  height: 200px;
   display: flex;
   flex-direction: column;
 }
@@ -411,7 +336,7 @@ const sendMessage = async () => {
 
 .generate-button {  
     position: relative;      /* 添加位置属性 */  
-    margin-top: 12px;       /* 与原样式保持一致的上边距 */  
+    margin-top: 5px;       /* 与原样式保持一致的上边距 */  
     background: var(--lightGreen); /* 使用变量颜色 */  
     cursor: pointer;         /* 指针光标 */  
     width: 100%;              /* 设置宽度 */  
@@ -422,7 +347,7 @@ const sendMessage = async () => {
     color: var(--white);     /* 使用变量颜色 */  
     overflow: hidden;        /* 设置溢出处理为隐藏 */  
     z-index: 1;              /* 阶层设置 */  
-    margin-bottom: 25px;     /* 下边距 */  
+    margin-bottom: 5px;     /* 下边距 */  
     border: none;            /* 去掉边框 */  
     padding: 0;              /* 去掉内边距，使用高度来确定大小 */  
 }  

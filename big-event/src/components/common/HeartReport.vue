@@ -17,12 +17,15 @@
         <li>透视检查看到的血管数: {{ docStore.heartParameters.ca }}</li>
         <li>缺陷种类: {{ docStore.heartParameters.thal }}</li>
       </ul>
+
+      <div class="image-gallery">  
+        <img v-for="(image, index) in docStore.images" :key="index" :src="image" alt="Uploaded Image" class="image-item" />  
+      </div>
       
       <h2 class="section-title">诊疗建议:</h2>
-      <!-- <p class="content">{{ docStore.suggestedAdvice }}</p> -->
       <span v-html="docStore.parsedMessage"></span> 
     </div>
-  </div>
+  </div> 
 </template>
 
 <script setup>
@@ -85,4 +88,15 @@ ul {
 ul li {
   margin-bottom: 5px;
 }
+
+/* image */
+.image-gallery {  
+  display: flex;  
+  flex-wrap: wrap;  
+}  
+
+.image-item {  
+  max-width: 200px; /* 设置图像最大宽度 */  
+  margin: 10px; /* 设置图像间距 */  
+}   
 </style>

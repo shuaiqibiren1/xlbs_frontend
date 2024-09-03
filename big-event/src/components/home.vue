@@ -112,6 +112,9 @@ const smallMenu = (data) => {
   toolbarDrawer.value = false;
 };
 
+// test
+import Sider from '@/components/common/sider.vue'
+
 
 // # 生命周期
 // onMounted 在组件被挂载到 DOM（文档对象模型）之后执行一些代码。
@@ -346,6 +349,9 @@ const handleCommand = (command)=>{
           </div>
         </div>
       </el-popover>
+    </div>
+    <div>
+      <Sider/>
     </div>
 
     <!-- 图片预览 -->

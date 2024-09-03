@@ -8,18 +8,42 @@
           <option value="3">A+C+S+R</option>
         </select>
         <button @click="saveAsHtml">Save as HTML</button>
+        <button @click="savePhoto">Save as Png</button>
       </div>
       <div class="checkbox-group">
         <label for="check1">Background</label>
-        <input type="checkbox" id="check1" v-model="backgroundChecked" @click="updateBackground" />
+        <input
+          type="checkbox"
+          id="check1"
+          v-model="backgroundChecked"
+          @click="updateBackground"
+        />
         <label for="check2">Mask</label>
-        <input type="checkbox" id="check2" v-model="maskChecked" @click="updateMask" />
+        <input
+          type="checkbox"
+          id="check2"
+          v-model="maskChecked"
+          @click="updateMask"
+        />
         <label for="check3">Smooth</label>
-        <input type="checkbox" id="check3" v-model="smoothChecked" @click="updateSmooth" />
+        <input
+          type="checkbox"
+          id="check3"
+          v-model="smoothChecked"
+          @click="updateSmooth"
+        />
       </div>
       <div class="opacity-slider">
         <label for="alphaSlider">Opacity</label>
-        <input type="range" min="1" max="255" v-model="alphaSliderValue" @input="updateOpacity" class="slider" id="alphaSlider" />
+        <input
+          type="range"
+          min="1"
+          max="255"
+          v-model="alphaSliderValue"
+          @input="updateOpacity"
+          class="slider"
+          id="alphaSlider"
+        />
       </div>
     </header>
 
@@ -47,9 +71,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import * as niivue from '@niivue/niivue';
-import useImageStore from '@/stores/images.js'; 
+import { ref, onMounted } from "vue";
+import * as niivue from "@niivue/niivue";
+import { esm } from "./index.min.js";
+import useImageStore from "@/stores/images.js";
 
 const imageStore = useImageStore();
 
@@ -64,7 +89,7 @@ const scriptText = ref(`let cmap = {
   B: [0, 120, 60, 175],
   labels: ["air", "CSF", "gray", "white"],
 };`);
-const location = ref('');
+const location = ref("");
 
 let nv1;
 
@@ -73,9 +98,12 @@ const handleLocationChange = (data) => {
 };
 
 const saveAsHtml = () => {
-  nv1.saveHTML('labels.html', 'gl1', decodeURIComponent(esm));
+  nv1.saveHTML("labels.html", "gl1", decodeURIComponent(esm));
 };
-
+const savePhoto = () => {
+  console.log("Saving as scene..."); // 调试输出
+  nv1.saveScene("ScreenShot.png");
+};
 const setSliceType = () => {
   nv1.setSliceType(parseInt(sliceType.value));
 };
@@ -100,7 +128,7 @@ const updateSmooth = () => {
 
 const applyScript = () => {
   let val = scriptText.value;
-  val += ';nv1.volumes[1].setColormapLabel(cmap);nv1.updateGLVolume();';
+  val += ";nv1.volumes[1].setColormapLabel(cmap);nv1.updateGLVolume();";
   eval(val);
 };
 
@@ -114,16 +142,16 @@ onMounted(async () => {
   });
 
   nv1.setRadiologicalConvention(false);
-  nv1.attachTo('gl1');
+  nv1.attachTo("gl1");
 
   const volumeList1 = [
     {
       url: imageStore.niiImgUrl,
-      colormap: 'red',
+      colormap: "red",
     },
     {
       url: imageStore.niiImgUrl,
-      colormap: 'green',
+      colormap: "green",
       opacity: 0.5,
     },
   ];
@@ -133,6 +161,15 @@ onMounted(async () => {
   nv1.setSliceType(nv1.sliceTypeMultiplanar);
   nv1.graph.autoSizeMultiplanar = true;
   nv1.updateGLVolume();
+  nv1.addLabel(
+    "LAScar",
+    {
+      textColor: [0.0, 1.0, 0.0, 1.0],
+      lineWidth: 3.0,
+      lineColor: [0.0, 1.0, 0.0, 1.0],
+    },
+    [[-38, 6, 2]]
+  );
   applyScript();
 });
 </script>
@@ -150,7 +187,8 @@ onMounted(async () => {
   height: 100vh; /* 使用整个视口的高度 */
 }
 
-.header, .footer {
+.header,
+.footer {
   background-color: var(--headerFooterBackground);
   padding: 15px;
   border-radius: 8px;
@@ -184,7 +222,7 @@ onMounted(async () => {
   /* background-color: var(--mainBackground); */
   padding: 15px;
   border-radius: 8px;
-  flex-grow: 1; 
+  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -153,6 +153,7 @@ onMounted(async () => {
   // 组件加载后，初始化按钮状态
   document.querySelectorAll(".viewBtn").forEach((btn) =>
   btn.addEventListener("click", onButtonClick)
+
 );
 });
 
@@ -313,107 +314,6 @@ async function onButtonClick(event) {
       toggleGroup(event.target.id);
     } //drag mode
   } // onButtonClick()
-
-// const onButtonClick = async (event) => {
-// async function onButtonClick(event) {
-//   const { id } = event.target;
-//   console.log(`Button with id ${event.target.id} clicked`);
-//   if (id === "SaveDraw") {
-//     nv1.saveImage({ filename: "draw.nii", isSaveDrawing: true });
-//     return;
-//   }
-//   if (id === "SaveBitmap") {
-//     nv1.saveScene("ScreenShot.png");       // right
-//     return;
-//   }
-//   if (id === "ShowHeader") {
-//     alert(nv1.volumes[0].hdr.toFormattedString());
-//     return;
-//   }
-//   if (id === "Colorbar") {
-//     nv1.opts.isColorbar = !nv1.opts.isColorbar;
-//     event.srcElement.classList.toggle("dropdown-item-checked");
-//     nv1.drawScene();
-//     return;
-//   }
-//   if (id === "Radiological") {
-//     nv1.opts.isRadiologicalConvention = !nv1.opts.isRadiologicalConvention;
-//     event.srcElement.classList.toggle("dropdown-item-checked");
-//     nv1.drawScene();
-//     return;
-//   }
-//   if (id === "Crosshair") {
-//     nv1.opts.show3Dcrosshair = !nv1.opts.show3Dcrosshair;
-//     event.srcElement.classList.toggle("dropdown-item-checked");
-//     nv1.drawScene();
-//     return;
-//   }
-//   if (id === "RemoveHaze") {
-//     const cm = nv1.opts.clipPlaneColor;
-//     if (isFilled) nv1.setClipPlane([0.3, 270, 0]);
-//     else nv1.setClipPlaneFill([0.3, 270, 0], cm);
-//     isFilled = !isFilled;
-//     nv1.drawScene();
-//     return;
-//   }
-//   if (id === "ClipPlane") {
-//     nv1.opts.isPlaneClip = !nv1.opts.isPlaneClip;
-//     nv1.drawScene();
-//     return;
-//   }
-//   if (id === "WorldSpace") {
-//     nv1.opts.isSliceMM = !nv1.opts.isSliceMM;
-//     event.srcElement.classList.toggle("dropdown-item-checked");
-//     nv1.drawScene();
-//     return;
-//   }
-//   if (id === "Interpolate") {
-//     nv1.setInterpolation(!nv1.opts.isNearestInterpolation);
-//     event.srcElement.classList.toggle("dropdown-item-checked");
-//     nv1.drawScene();
-//     return;
-//   }
-//   if (id === "Left") {
-//     nv1.moveCrosshairInVox(-1, 0, 0);
-//     return;
-//   }
-//   if (id === "Right") {
-//     nv1.moveCrosshairInVox(1, 0, 0);
-//     return;
-//   }
-//   if (id === "Anterior") {
-//     nv1.moveCrosshairInVox(0, 1, 0);
-//     return;
-//   }
-//   if (id === "Posterior") {
-//     nv1.moveCrosshairInVox(0, -1, 0);
-//     return;
-//   }
-//   if (id === "Inferior") {
-//     nv1.moveCrosshairInVox(0, 0, -1);
-//     return;
-//   }
-//   if (id === "Superior") {
-//     nv1.moveCrosshairInVox(0, 0, 1);
-//     return;
-//   }
-//   if (id.charAt(0) === "|") {
-//     nv1.setSliceType(parseInt(id.slice(1)));
-//     toggleGroup(id);
-//   }
-//   if (id.charAt(0) === "@") {
-//     nv1.drawPenValue = parseInt(id.charAt(1));
-//     toggleGroup(id);
-//   }
-//   if (id.charAt(0) === "^") {
-//     nv1.opts.dragMode = nv1.dragModes[id.slice(1)];
-//     toggleGroup(id);
-//   }
-// }
-
-// document.querySelectorAll(".viewBtn").forEach((btn) =>
-//   btn.addEventListener("click", onButtonClick)
-// );
 
 </script>
 
