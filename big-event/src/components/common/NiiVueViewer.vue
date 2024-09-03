@@ -1,22 +1,4 @@
 <template>
-  <div id="app" class="container">
-    <div class="feature-section">
-      <h1>Select a Feature1</h1>
-      <button @click="navigateToHtmlPage('1')" type="button" class="styled-button">Go to HTML Page</button>
-    </div>
-
-    <div class="feature-section">
-      <h1>Select a Feature2</h1>
-      <button @click="navigateToHtmlPage('2')" type="button" class="styled-button">Go to HTML Page</button>
-    </div>
-
-    <div class="feature-section">
-      <h1>Select a Feature3</h1>
-      <button @click="navigateToHtmlPage('3')" type="button" class="styled-button">Go to HTML Page</button>
-    </div>
-
-  </div>
-
   <el-upload
     class="upload-area"
     drag
@@ -85,10 +67,6 @@ const handleError = (err, file, fileList) => {
   console.error('Upload failed:', err);
 };
 
-// 使用参考
-// import useImageStore from '@/stores/images.js'; 
-// const imageStore = useImageStore();
-// url = imageStore.niiImgList[0]
 
 </script>
 

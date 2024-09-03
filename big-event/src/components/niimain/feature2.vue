@@ -1,505 +1,3 @@
-<!-- <template>
-  <div class="container">
-    <header class="header">
-      <div class="dropdown" v-for="(menu, index) in menus" :key="index">
-        <button class="dropbtn">
-          {{ menu.title }}
-          <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-          <a
-            v-for="(item, idx) in menu.items"
-            :key="idx"
-            :id="item.id"
-            :class="{ 'dropdown-item-checked': item.checked }"
-            class="viewBtn"
-            @click="onButtonClick($event)"
-            :accesskey="item.accesskey"
-          >
-            {{ item.label }}
-          </a>
-        </div>
-      </div>
-    </header>
-    <main class="main">
-      <canvas id="gl1"></canvas>
-    </main>
-    <footer class="footer" id="intensity">&nbsp;</footer>
-  </div>
-</template>
-
-<script setup>
-import { ref, onMounted } from "vue";
-import * as niivue from "@niivue/niivue";
-import useImageStore from '@/stores/images.js'; 
-
-const imageStore = useImageStore();
-
-const menus = ref([
-  { 
-    label: 'File', 
-    items: [
-      { id: 'SaveDraw', label: 'Save Drawing ^S' },
-      { id: 'SaveBitmap', label: 'Screen Shot' },
-      { id: 'ShowHeader', label: 'Show Header' },
-      { id: 'About', label: 'About', href: 'https://www.youtube.com/watch?v=AR83_Bt04VQ&t=1867s&ab_channel=Freesurfer' }
-    ] 
-  },
-  {
-    label: 'Edit', 
-    items: [
-      { id: 'Undo', label: 'Undo Draw ^Z' }
-    ]
-  },
-  {
-    label: 'View', 
-    items: [
-      { id: '|Axial', label: 'Axial' },
-      { id: '|Sagittal', label: 'Sagittal' },
-      { id: '|Coronal', label: 'Coronal' },
-      { id: '|Render', label: 'Render' },
-      { id: '|MultiPlanar', label: 'A+C+S', checked: true },
-      { id: '|MultiPlanarRender', label: 'A+C+S+R' },
-      { id: 'Colorbar', label: 'Colorbar', checked: true },
-      { id: 'Radiological', label: 'Radiological' },
-      { id: 'Crosshair', label: 'Render Crosshair', checked: true },
-      { id: 'ClipPlane', label: 'Render Clip Plane' },
-      { id: 'WorldSpace', label: 'World Space' },
-      { id: 'Interpolate', label: 'Smooth Interpolation' },
-      { id: 'RemoveHaze', label: 'Remove Haze' },
-      { id: 'Left', label: 'Left' },
-      { id: 'Right', label: 'Right' },
-      { id: 'Anterior', label: 'Anterior' },
-      { id: 'Posterior', label: 'Posterior' },
-      { id: 'Inferior', label: 'Inferior' },
-      { id: 'Superior', label: 'Superior' }
-    ]
-  },
-  {
-    label: 'Draw',
-    items: [
-      { id: '@Off', label: 'Off ^0', checked: true },
-      { id: '@Red', label: 'Red (edit white matter) ^1' },
-      { id: '@Blue', label: 'Blue (edit T1 scan) ^2' },
-      { id: '@Erase', label: 'Erase ^7' },
-      { id: '@Cluster', label: 'Erase Cluster ^8' },
-      { id: '@GrowCluster', label: 'Grow Cluster' },
-      { id: '@GrowClusterDark', label: 'Grow Cluster Dark' },
-      { id: '@GrowClusterBright', label: 'Grow Cluster Bright' },
-      { id: 'DrawFilled', label: 'Fill Outline ^F', checked: true },
-      { id: 'DrawOverwrite', label: 'Pen Overwrites Existing ^O', checked: true },
-      { id: 'Translucent', label: 'Translucent ^T', checked: true },
-      { id: 'Growcut', label: 'Grow Cut' },
-      { id: 'DrawOtsu', label: 'Otsu' }
-    ]
-  },
-  {
-    label: 'Drag',
-    items: [
-      { id: '^contrast', label: 'Contrast' },
-      { id: '^measurement', label: 'Measurement' },
-      { id: '^pan', label: 'Pan/Zoom' },
-      { id: '^slicer3D', label: 'Slicer3D', checked: true },
-      { id: '^none', label: 'None' }
-    ]
-  }
-]);
-
-let nv1;
-let isFilled = true;
-
-function handleIntensityChange(data) {
-  document.getElementById("intensity").innerHTML = "&nbsp;&nbsp;" + data.string;
-}
-
-onMounted(async () => {
-  nv1 = new niivue.Niivue({
-    logging: true,
-    dragAndDropEnabled: true,
-    backColor: [0, 0, 0, 1],
-    show3Dcrosshair: true,
-    onLocationChange: handleIntensityChange,
-  });
-  nv1.opts.isColorbar = false;
-  nv1.setRadiologicalConvention(false);
-  nv1.attachTo("gl1");
-  nv1.setClipPlane([0.3, 270, 0]);
-  nv1.setRenderAzimuthElevation(120, 10);
-  nv1.setSliceType(nv1.sliceTypeMultiplanar);
-  nv1.setSliceMM(true);
-  nv1.drawOpacity = 0.5;
-  nv1.opts.isColorbar = false;
-  const volumeList1 = [{ url: imageStore.niiImgUrl }];
-  await nv1.loadVolumes(volumeList1);
-  nv1.setInterpolation(true);
-  nv1.opts.dragMode = nv1.dragModes.slicer3D;
-  const cmap = {
-    R: [0, 255, 0],
-    G: [0, 20, 0],
-    B: [0, 20, 80],
-    A: [0, 255, 255],
-    labels: ["", "white-matter", "delete T1"],
-  };
-  nv1.setDrawColormap(cmap);
-});
-
-function toggleGroup(id) {
-  let buttons = document.getElementsByClassName("viewBtn");
-  let char0 = id.charAt(0);
-  for (let i = 0; i < buttons.length; i++) {
-    if (buttons[i].id.charAt(0) !== char0) continue;
-    buttons[i].classList.remove("dropdown-item-checked");
-    if (buttons[i].id === id) buttons[i].classList.add("dropdown-item-checked");
-  }
-}
-
-function onButtonClick(event) {
-  const id = event.target.id;
-
-  switch (id) {
-    case "SaveDraw":
-      nv1.saveImage({ filename: "draw.nii", isSaveDrawing: true });
-      break;
-    case "SaveBitmap":
-      nv1.saveScene("ScreenShot.png");
-      break;
-    case "ShowHeader":
-      alert(nv1.volumes[0].hdr.toFormattedString());
-      break;
-    case "Colorbar":
-      nv1.opts.isColorbar = !nv1.opts.isColorbar;
-      event.srcElement.classList.toggle("dropdown-item-checked");
-      nv1.drawScene();
-      break;
-    case "Radiological":
-      nv1.opts.isRadiologicalConvention = !nv1.opts.isRadiologicalConvention;
-      event.srcElement.classList.toggle("dropdown-item-checked");
-      nv1.drawScene();
-      break;
-    case "Crosshair":
-      nv1.opts.show3Dcrosshair = !nv1.opts.show3Dcrosshair;
-      event.srcElement.classList.toggle("dropdown-item-checked");
-      nv1.drawScene();
-      break;
-    case "ClipPlane":
-      if (nv1.scene.clipPlaneDepthAziElev[0] > 1) nv1.setClipPlane([0.3, 270, 0]);
-      else nv1.setClipPlane([2, 270, 0]);
-      nv1.drawScene();
-      break;
-    case "Undo":
-      nv1.drawUndo();
-      break;
-    default:
-      if (id.charAt(0) === "@") {
-        nv1.setDrawingEnabled(id !== "@Off");
-        if (id === "@Erase") nv1.setPenValue(0, isFilled);
-        if (id === "@Red") nv1.setPenValue(1, isFilled);
-        if (id === "@Blue") nv1.setPenValue(2, isFilled);
-        if (id === "@Cluster") nv1.setPenValue(-0, isFilled);
-        if (id === "@GrowCluster") nv1.setPenValue(NaN, isFilled);
-        if (id === "@GrowClusterBright") nv1.setPenValue(Number.POSITIVE_INFINITY, isFilled);
-        if (id === "@GrowClusterDark") nv1.setPenValue(Number.NEGATIVE_INFINITY, isFilled);
-        toggleGroup(id);
-      } else if (id === "Growcut") {
-        nv1.drawGrowCut();
-      } else if (id === "Translucent") {
-        nv1.drawOpacity = nv1.drawOpacity > 0.75 ? 0.5 : 1.0;
-        nv1.drawScene();
-        event.srcElement.classList.toggle("dropdown-item-checked");
-      } else if (id === "DrawOtsu") {
-        const levels = parseInt(prompt("Segmentation classes (2..4)", "3"));
-        nv1.drawOtsu(levels);
-      } else if (id === "RemoveHaze") {
-        const level = parseInt(prompt("Remove Haze (1..5)", "5"));
-        nv1.removeHaze(level);
-      } else if (id === "DrawFilled") {
-        isFilled = !isFilled;
-        nv1.setPenValue(nv1.opts.penValue, isFilled);
-        event.srcElement.classList.toggle("dropdown-item-checked");
-      }
-  }
-}
-</script>
-
-<style scoped>
-.container {
-  margin: 20px;
-  padding: 20px;
-  background-color: var(--background);
-  color: var(--fontColor);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 100vh; /* 使用整个视口的高度 */
-}
-
-
-.header {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #ddd;
-}
-
-.main {
-  flex-grow: 1; /* Occupy the remaining space */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-
-.footer {
-  padding: 10px;
-  background-color: #f8f8f8;
-  border-top: 1px solid #ddd;
-}
-
-.dropdown {
-  float: left;
-  overflow: hidden;
-}
-
-.dropdown .dropbtn {
-  font-size: 16px;
-  border: none;
-  outline: none;
-  color: white;
-  padding: 12px 12px;
-  background-color: #404040;
-  font-family: inherit;
-  margin: 0;
-}
-.dropdown:hover .dropbtn {
-  background-color: #9a9;
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #303030;
-  min-width: 160px;
-  border-radius: 5px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-.dropdown-content a {
-  float: none;
-  color: white;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-  line-height: 6px;
-}
-.dropdown-content a:hover {
-  background-color: #aba;
-}
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-.dropdown-item-checked::before {
-  position: absolute;
-  left: 0.2rem;
-  content: "\2022"; /* or '✓' */
-  font-weight: 600;
-}
-
-.viewBtn.dropdown-item-checked {
-  background-color: #d3d3d3;
-}
-</style> -->
-
-<!-- 
-<template>
-  <div class="container">
-  <header>
-    <div class="dropdown" v-for="menu in menus" :key="menu.name">
-      <button class="dropbtn">
-        {{ menu.name }}
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a v-for="item in menu.items" :key="item.id" class="viewBtn" :id="item.id" @click="onButtonClick">
-          {{ item.label }}
-        </a>
-      </div>
-    </div>
-  </header>
-  <main id="container">
-    <canvas id="gl1"></canvas>
-  </main>
-  <footer id="intensity">&nbsp;</footer>
-  </div>
-</template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import * as niivue from "@niivue/niivue";
-
-// Dropdown menu structure
-const menus = [
-  {
-    name: "File",
-    items: [
-      { id: "SaveDraw", label: "Save Drawing ^S" },
-      { id: "SaveBitmap", label: "Screen Shot" },
-      { id: "ShowHeader", label: "Show Header" },
-      { id: "About", label: "About" },
-    ],
-  },
-  {
-    name: "Edit",
-    items: [{ id: "Undo", label: "Undo Draw ^Z" }],
-  },
-  // Add other menus here following the same structure...
-];
-
-let nv1;
-let isFilled = ref(true);
-
-const handleIntensityChange = (data) => {
-  document.getElementById("intensity").innerHTML =
-    "&nbsp;&nbsp;" + data.string;
-}
-
-const onButtonClick = async (event) => {
-  const id = event.target.id;
-  switch (id) {
-    case "SaveDraw":
-      nv1.saveImage({ filename: 'draw.nii', isSaveDrawing: true });
-      break;
-    case "SaveBitmap":
-      nv1.saveScene("ScreenShot.png");
-      break;
-    case "ShowHeader":
-      alert(nv1.volumes[0].hdr.toFormattedString());
-      break;
-    // Handle other cases...
-  }
-}
-
-onMounted(async () => {
-  nv1 = new niivue.Niivue({
-    logging: true,
-    dragAndDropEnabled: true,
-    backColor: [0, 0, 0, 1],
-    show3Dcrosshair: true,
-    onLocationChange: handleIntensityChange,
-  });
-  nv1.opts.isColorbar = false;
-  nv1.setRadiologicalConvention(false);
-  nv1.attachTo("gl1");
-  nv1.setClipPlane([0.3, 270, 0]);
-  nv1.setRenderAzimuthElevation(120, 10);
-  nv1.setSliceType(nv1.sliceTypeMultiplanar);
-  nv1.setSliceMM(true);
-  nv1.drawOpacity = 0.5;
-  nv1.opts.isColorbar = false;
-  const volumeList1 = [{ url: "https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/heart2.nii.gz" }];
-  await nv1.loadVolumes(volumeList1);
-  nv1.setInterpolation(true);
-  nv1.opts.dragMode = nv1.dragModes.slicer3D;
-
-  const cmap = {
-    R: [0, 255, 0],
-    G: [0, 20, 0],
-    B: [0, 20, 80],
-    A: [0, 255, 255],
-    labels: ["", "white-matter", "delete T1"],
-  };
-  nv1.setDrawColormap(cmap);
-});
-</script>
-
-<style>
-/* Add your styles here, or import the existing stylesheet */
-
-.container {
-  font-family: system-ui, Arial, Helvetica, sans-serif;
-  border-radius: 10px;
-  margin: 20px;
-  padding: 20px;
-  background-color: var(--background);
-  color: var(--fontColor);
-}
-
-
-main {
-  flex: 1;
-  background: #000000;
-  position: relative;
-}
-
-
-.footer {
-  margin: 10px;
-  background-color: #f8f8f8;
-  border-top: 1px solid #ddd;
-}
-
-.dropdown {
-  float: left;
-  overflow: hidden;
-}
-
-.dropdown .dropbtn {
-  font-size: 16px;
-  border: none;
-  outline: none;
-  color: white;
-  padding: 12px 12px;
-  background-color: #404040;
-  font-family: inherit;
-  margin: 0;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #9a9;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #303030;
-  min-width: 160px;
-  border-radius: 5px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  float: none;
-  color: white;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-  line-height: 6px;
-}
-
-.dropdown-content a:hover {
-  background-color: #aba;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-item-checked::before {
-  position: absolute;
-  left: 0.2rem;
-  content: "\2022"; /* or '✓' */
-  font-weight: 600;
-}
-
-
-
-</style> -->
 <template>
   <header>
   <div class="drop-container">
@@ -651,6 +149,11 @@ onMounted(async () => {
     labels: ["", "white-matter", "delete T1"],
   };
   nv1.setDrawColormap(cmap);
+
+  // 组件加载后，初始化按钮状态
+  document.querySelectorAll(".viewBtn").forEach((btn) =>
+  btn.addEventListener("click", onButtonClick)
+);
 });
 
 function toggleGroup(id) {
@@ -665,103 +168,253 @@ function toggleGroup(id) {
 }
 
 async function onButtonClick(event) {
-  const { id } = event.target;
-  if (id === "SaveDraw") {
-    nv1.saveImage({ filename: "draw.nii", isSaveDrawing: true });
-    return;
-  }
-  if (id === "SaveBitmap") {
-    nv1.saveScene("ScreenShot.png");
-    return;
-  }
-  if (id === "ShowHeader") {
-    alert(nv1.volumes[0].hdr.toFormattedString());
-    return;
-  }
-  if (id === "Colorbar") {
-    nv1.opts.isColorbar = !nv1.opts.isColorbar;
-    event.srcElement.classList.toggle("dropdown-item-checked");
-    nv1.drawScene();
-    return;
-  }
-  if (id === "Radiological") {
-    nv1.opts.isRadiologicalConvention = !nv1.opts.isRadiologicalConvention;
-    event.srcElement.classList.toggle("dropdown-item-checked");
-    nv1.drawScene();
-    return;
-  }
-  if (id === "Crosshair") {
-    nv1.opts.show3Dcrosshair = !nv1.opts.show3Dcrosshair;
-    event.srcElement.classList.toggle("dropdown-item-checked");
-    nv1.drawScene();
-    return;
-  }
-  if (id === "RemoveHaze") {
-    const cm = nv1.opts.clipPlaneColor;
-    if (isFilled) nv1.setClipPlane([0.3, 270, 0]);
-    else nv1.setClipPlaneFill([0.3, 270, 0], cm);
-    isFilled = !isFilled;
-    nv1.drawScene();
-    return;
-  }
-  if (id === "ClipPlane") {
-    nv1.opts.isPlaneClip = !nv1.opts.isPlaneClip;
-    nv1.drawScene();
-    return;
-  }
-  if (id === "WorldSpace") {
-    nv1.opts.isSliceMM = !nv1.opts.isSliceMM;
-    event.srcElement.classList.toggle("dropdown-item-checked");
-    nv1.drawScene();
-    return;
-  }
-  if (id === "Interpolate") {
-    nv1.setInterpolation(!nv1.opts.isNearestInterpolation);
-    event.srcElement.classList.toggle("dropdown-item-checked");
-    nv1.drawScene();
-    return;
-  }
-  if (id === "Left") {
-    nv1.setRenderAzimuthElevation(90, 0);
-    return;
-  }
-  if (id === "Right") {
-    nv1.setRenderAzimuthElevation(270, 0);
-    return;
-  }
-  if (id === "Anterior") {
-    nv1.setRenderAzimuthElevation(180, 0);
-    return;
-  }
-  if (id === "Posterior") {
-    nv1.setRenderAzimuthElevation(0, 0);
-    return;
-  }
-  if (id === "Inferior") {
-    nv1.setRenderAzimuthElevation(0, 90);
-    return;
-  }
-  if (id === "Superior") {
-    nv1.setRenderAzimuthElevation(0, -90);
-    return;
-  }
-  if (id.charAt(0) === "|") {
-    nv1.setSliceType(parseInt(id.slice(1)));
-    toggleGroup(id);
-  }
-  if (id.charAt(0) === "@") {
-    nv1.drawPenValue = parseInt(id.charAt(1));
-    toggleGroup(id);
-  }
-  if (id.charAt(0) === "^") {
-    nv1.opts.dragMode = nv1.dragModes[id.slice(1)];
-    toggleGroup(id);
-  }
-}
+    if (event.target.id === "SaveDraw") {
+      nv1.saveImage({ filename: 'draw.nii', isSaveDrawing: true })
+      return;
+    }
+    if (event.target.id === "SaveBitmap") {
+      nv1.saveScene("ScreenShot.png");
+      return;
+    }
+    if (event.target.id === "ShowHeader") {
+      alert(nv1.volumes[0].hdr.toFormattedString());
+      return;
+    }
+    if (event.target.id === "Colorbar") {
+      nv1.opts.isColorbar = !nv1.opts.isColorbar;
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      nv1.drawScene();
+      return;
+    }
+    if (event.target.id === "Radiological") {
+      nv1.opts.isRadiologicalConvention = !nv1.opts.isRadiologicalConvention;
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      nv1.drawScene();
+      return;
+    }
+    if (event.target.id === "Crosshair") {
+      nv1.opts.show3Dcrosshair = !nv1.opts.show3Dcrosshair;
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      nv1.drawScene();
+    }
+    if (event.target.id === "ClipPlane") {
+      if (nv1.scene.clipPlaneDepthAziElev[0] > 1)
+        nv1.setClipPlane([0.3, 270, 0]);
+      else nv1.setClipPlane([2, 270, 0]);
+      nv1.drawScene();
+      return;
+    }
+    if (event.target.id === "Undo") {
+      nv1.drawUndo();
+    }
+    if (event.target.id.charAt(0) === "@") {
+      //sliceType
+      if (event.target.id === "@Off") nv1.setDrawingEnabled(false);
+      else nv1.setDrawingEnabled(true);
+      if (event.target.id === "@Erase") nv1.setPenValue(0, isFilled);
+      if (event.target.id === "@Red") nv1.setPenValue(1, isFilled);
+      if (event.target.id === "@Blue") nv1.setPenValue(2, isFilled);
+      if (event.target.id === "@Cluster") nv1.setPenValue(-0, isFilled);
+      if (event.target.id === "@GrowCluster") nv1.setPenValue(NaN, isFilled);
+      if (event.target.id === "@GrowClusterBright")
+        nv1.setPenValue(Number.POSITIVE_INFINITY, isFilled);
+      if (event.target.id === "@GrowClusterDark")
+        nv1.setPenValue(Number.NEGATIVE_INFINITY, isFilled);
+      toggleGroup(event.target.id);
+    } //Draw Color
+    if (event.target.id === "Growcut") nv1.drawGrowCut();
+    if (event.target.id === "Translucent") {
+      if (nv1.drawOpacity > 0.75) nv1.drawOpacity = 0.5;
+      else nv1.drawOpacity = 1.0;
+      nv1.drawScene();
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      return;
+    }
+    if (event.target.id === "DrawOtsu") {
+      let levels = parseInt(prompt("Segmentation classes (2..4)", "3"));
+      nv1.drawOtsu(levels);
+    }
+    if (event.target.id === "RemoveHaze") {
+      let level = parseInt(prompt("Remove Haze (1..5)", "5"));
+      nv1.removeHaze(level);
+    }
+    if (event.target.id === "DrawFilled") {
+      isFilled = !isFilled;
+      nv1.setPenValue(nv1.opts.penValue, isFilled);
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      return;
+    }
+    if (event.target.id === "DrawOverwrite") {
+      nv1.drawFillOverwrites = !nv1.drawFillOverwrites;
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      return;
+    }
+    if (event.target.id.charAt(0) === "|") {
+      //sliceType
+      if (event.target.id === "|Axial") nv1.setSliceType(nv1.sliceTypeAxial);
+      if (event.target.id === "|Coronal")
+        nv1.setSliceType(nv1.sliceTypeCoronal);
+      if (event.target.id === "|Sagittal")
+        nv1.setSliceType(nv1.sliceTypeSagittal);
+      if (event.target.id === "|Render") nv1.setSliceType(nv1.sliceTypeRender);
+      if (event.target.id === "|MultiPlanar") {
+        nv1.opts.multiplanarShowRender = niivue.SHOW_RENDER.AUTO;
+        nv1.setSliceType(nv1.sliceTypeMultiplanar);
+      }
+      if (event.target.id === "|MultiPlanarRender") {
+        nv1.opts.multiplanarShowRender = niivue.SHOW_RENDER.ALWAYS;
+        nv1.setSliceType(nv1.sliceTypeMultiplanar);
+      }
+      toggleGroup(event.target.id);
+    } //sliceType
+    if (event.target.id === "WorldSpace") {
+      nv1.setSliceMM(!nv1.opts.isSliceMM);
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      return;
+    }
+    if (event.target.id === "Interpolate") {
+      nv1.setInterpolation(!nv1.opts.isNearestInterpolation);
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      return;
+    }
+    if (event.target.id === "Left") nv1.moveCrosshairInVox(-1, 0, 0);
+    if (event.target.id === "Right") nv1.moveCrosshairInVox(1, 0, 0);
+    if (event.target.id === "Posterior") nv1.moveCrosshairInVox(0, -1, 0);
+    if (event.target.id === "Anterior") nv1.moveCrosshairInVox(0, 1, 0);
+    if (event.target.id === "Inferior") nv1.moveCrosshairInVox(0, 0, -1);
+    if (event.target.id === "Superior") nv1.moveCrosshairInVox(0, 0, 1);
+    if (event.target.id === "BackColor") {
+      if (nv1.opts.backColor[0] < 0.5) nv1.opts.backColor = [1, 1, 1, 1];
+      else nv1.opts.backColor = [0, 0, 0, 1];
+      nv1.drawScene();
+      event.srcElement.classList.toggle("dropdown-item-checked");
+      return;
+    }
+    if (event.target.id.charAt(0) === "^") {
+      //drag mode
+      let s = event.target.id.substr(1);
+      switch (s) {
+        case "none":
+          nv1.opts.dragMode = nv1.dragModes.none;
+          break;
+        case "contrast":
+          nv1.opts.dragMode = nv1.dragModes.contrast;
+          break;
+        case "measurement":
+          nv1.opts.dragMode = nv1.dragModes.measurement;
+          break;
+        case "pan":
+          nv1.opts.dragMode = nv1.dragModes.pan;
+          break;
+        case "slicer3D":
+          nv1.opts.dragMode = nv1.dragModes.slicer3D;
+          break;
+      }
+      toggleGroup(event.target.id);
+    } //drag mode
+  } // onButtonClick()
 
-document.querySelectorAll(".viewBtn").forEach((btn) =>
-  btn.addEventListener("click", onButtonClick)
-);
+// const onButtonClick = async (event) => {
+// async function onButtonClick(event) {
+//   const { id } = event.target;
+//   console.log(`Button with id ${event.target.id} clicked`);
+//   if (id === "SaveDraw") {
+//     nv1.saveImage({ filename: "draw.nii", isSaveDrawing: true });
+//     return;
+//   }
+//   if (id === "SaveBitmap") {
+//     nv1.saveScene("ScreenShot.png");       // right
+//     return;
+//   }
+//   if (id === "ShowHeader") {
+//     alert(nv1.volumes[0].hdr.toFormattedString());
+//     return;
+//   }
+//   if (id === "Colorbar") {
+//     nv1.opts.isColorbar = !nv1.opts.isColorbar;
+//     event.srcElement.classList.toggle("dropdown-item-checked");
+//     nv1.drawScene();
+//     return;
+//   }
+//   if (id === "Radiological") {
+//     nv1.opts.isRadiologicalConvention = !nv1.opts.isRadiologicalConvention;
+//     event.srcElement.classList.toggle("dropdown-item-checked");
+//     nv1.drawScene();
+//     return;
+//   }
+//   if (id === "Crosshair") {
+//     nv1.opts.show3Dcrosshair = !nv1.opts.show3Dcrosshair;
+//     event.srcElement.classList.toggle("dropdown-item-checked");
+//     nv1.drawScene();
+//     return;
+//   }
+//   if (id === "RemoveHaze") {
+//     const cm = nv1.opts.clipPlaneColor;
+//     if (isFilled) nv1.setClipPlane([0.3, 270, 0]);
+//     else nv1.setClipPlaneFill([0.3, 270, 0], cm);
+//     isFilled = !isFilled;
+//     nv1.drawScene();
+//     return;
+//   }
+//   if (id === "ClipPlane") {
+//     nv1.opts.isPlaneClip = !nv1.opts.isPlaneClip;
+//     nv1.drawScene();
+//     return;
+//   }
+//   if (id === "WorldSpace") {
+//     nv1.opts.isSliceMM = !nv1.opts.isSliceMM;
+//     event.srcElement.classList.toggle("dropdown-item-checked");
+//     nv1.drawScene();
+//     return;
+//   }
+//   if (id === "Interpolate") {
+//     nv1.setInterpolation(!nv1.opts.isNearestInterpolation);
+//     event.srcElement.classList.toggle("dropdown-item-checked");
+//     nv1.drawScene();
+//     return;
+//   }
+//   if (id === "Left") {
+//     nv1.moveCrosshairInVox(-1, 0, 0);
+//     return;
+//   }
+//   if (id === "Right") {
+//     nv1.moveCrosshairInVox(1, 0, 0);
+//     return;
+//   }
+//   if (id === "Anterior") {
+//     nv1.moveCrosshairInVox(0, 1, 0);
+//     return;
+//   }
+//   if (id === "Posterior") {
+//     nv1.moveCrosshairInVox(0, -1, 0);
+//     return;
+//   }
+//   if (id === "Inferior") {
+//     nv1.moveCrosshairInVox(0, 0, -1);
+//     return;
+//   }
+//   if (id === "Superior") {
+//     nv1.moveCrosshairInVox(0, 0, 1);
+//     return;
+//   }
+//   if (id.charAt(0) === "|") {
+//     nv1.setSliceType(parseInt(id.slice(1)));
+//     toggleGroup(id);
+//   }
+//   if (id.charAt(0) === "@") {
+//     nv1.drawPenValue = parseInt(id.charAt(1));
+//     toggleGroup(id);
+//   }
+//   if (id.charAt(0) === "^") {
+//     nv1.opts.dragMode = nv1.dragModes[id.slice(1)];
+//     toggleGroup(id);
+//   }
+// }
+
+// document.querySelectorAll(".viewBtn").forEach((btn) =>
+//   btn.addEventListener("click", onButtonClick)
+// );
+
 </script>
 
 <style>
