@@ -100,8 +100,7 @@ import UserInfoForm from '@/components/common/UserInfoForm.vue';
 import ImageDisplay from '@/components/common/ImageDisplay.vue';
 import { useStore } from 'vuex';
 import Printer from '@/components/common/printer.vue';
-import heartimg from '@/assets/heart.png';
-import Chat from '@/components/common/chat.vue'
+
 
 
 

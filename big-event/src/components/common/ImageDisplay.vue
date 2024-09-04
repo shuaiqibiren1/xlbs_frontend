@@ -1,5 +1,6 @@
 <template>
   <el-card class="page-container">
+    <span class="image-number">图 {{ currentIndex + 1 }}</span>
     <div class="content">
       <div class="image-container">
         <transition name="fade" mode="out-in">
@@ -17,14 +18,20 @@
         />
       </div>
     </div>
+    <el-button @click="addImageToDoc" type="primary" class="add-image-button">  
+      添加到文档  
+    </el-button>  
   </el-card>
 </template>
 
 <script setup>
+import {ElMessage,ElMessageBox} from 'element-plus'
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import useImageStore from '@/stores/images.js'; // 导入Pinia store
 import heartimg from '@/assets/heart.png'; // 导入默认图片
+import useDocStore from '@/stores/document.js';
 
+const docStore = useDocStore();
 const imageStore = useImageStore();
 const images = computed(() => imageStore.imageList);
 const currentIndex = ref(0);
@@ -59,6 +66,13 @@ const handleWheel = (event) => {
   }
 };
 
+// 添加图片到文档的函数  
+const addImageToDoc = () => {  
+  const imageUrl = currentImage.value;  
+  docStore.addImage2D(imageUrl); // 将当前图片URL添加到document store中  
+  ElMessage.success('图片已添加到文档'); // 提示用户  
+};  
+
 onMounted(() => {
   if (thumbnailList.value) {
     thumbnailList.value.addEventListener('wheel', handleWheel);
@@ -73,6 +87,18 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+
+.image-number {  
+  top: 20px;  
+  left: 20px;  
+  background-color: rgba(255, 255, 255, 0.7);  
+  padding: 20px;  
+  border-radius: 5px;  
+  font-weight: bold;  
+  font-size: 24px;  
+  font-family: serif;  
+} 
+
 .page-container {
   max-width: 800px;
   margin: auto;

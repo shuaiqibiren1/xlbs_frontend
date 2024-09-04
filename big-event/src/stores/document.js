@@ -24,6 +24,7 @@ const useDocStore = defineStore('document', () => {
     });
 
     const images = ref([heartimg]);
+    const images2D = ref([heartimg]);
     const suggestedAdvice = ref("根据心脏参数，建议定期检查并保持健康的生活方式。如有进一步不适，请及时就医。");
     const parsedMessage = ref();
 
@@ -113,9 +114,21 @@ const useDocStore = defineStore('document', () => {
         images.value.push(image);
     };
 
+    const addImage2D = (image) => {
+        images2D.value.push(image);
+    };
+
     const resetImage = () => {
         images.value = [heartimg];
     }
+
+    const deleteImage = (index) => {
+        images.value.splice(index, 1); // 从数组中删除指定索引的图片  
+    };
+
+    const deleteImage2D = (index) => {
+        images2D.value.splice(index, 1); // 从数组中删除指定索引的图片  
+    };
 
     // 生成 PDF 的函数  
     const generatePDF = async () => {
@@ -130,14 +143,18 @@ const useDocStore = defineStore('document', () => {
 
     return {
         images,
+        images2D,
         heartParameters,
         suggestedAdvice,
         parsedMessage,
         fetchHeartParameters,
         fetchWenxinAdvice,
         addImage,
+        addImage2D,
         generatePDF,
-        resetImage
+        resetImage,
+        deleteImage,
+        deleteImage2D
     };
 }, { persist: true });
 

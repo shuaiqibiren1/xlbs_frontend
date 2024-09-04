@@ -1,26 +1,56 @@
-<template>
-  <div class="collapsible-gallery" :style="{ left: `${position.x}px`, top: `${position.y}px` }">
-    <div class="toggle-area" @click="toggleGallery">
-      <span class="toggle-icon" v-if="!isOpen">▶</span>
-      <span class="toggle-icon" v-else>▼</span>
-      <span class="toggle-text">{{ isOpen ? '收起' : '展开' }} 图片</span>
+<template>  
+  <div class="collapsible-gallery" :style="{ left: `${position.x}px`, top: `${position.y}px` }">  
+    <div class="toggle-area" @click="toggleGallery(1)">  
+      <span class="toggle-icon" v-if="!isOpen">▶</span>  
+      <span class="toggle-icon" v-else>▼</span>  
+      <span class="toggle-text">{{ isOpen ? '收起' : '展开' }} 3维图片</span>  
+    </div>  
+    <div v-if="isOpen" class="image-gallery-container">  
+      <div class="image-gallery">  
+        <div v-for="(image, index) in docStore.images" :key="index" class="image-item-container">  
+          <img :src="image" alt="Uploaded Image" class="image-item" />  
+          <button @click="deleteImage(index)" class="delete-button">×</button>  
+        </div>  
+      </div>  
+    </div>  
+
+    <div class="toggle-area" @click="toggleGallery(2)">  
+      <span class="toggle-icon" v-if="!isOpen2">▶</span>  
+      <span class="toggle-icon" v-else>▼</span>  
+      <span class="toggle-text">{{ isOpen ? '收起' : '展开' }} 2维图片</span>  
+    </div>  
+    <div v-if="isOpen2" class="image-gallery-container">  
+      <div class="image-gallery">  
+        <div v-for="(image, index) in docStore.images2D" :key="index" class="image-item-container">  
+          <img :src="image" alt="Uploaded Image" class="image-item" />  
+          <button @click="deleteImage(index)" class="delete-button">×</button>  
+        </div>  
+      </div>  
     </div>
-    <div v-if="isOpen" class="image-gallery">
-      <img v-for="(image, index) in docStore.images" :key="index" :src="image" alt="Uploaded Image" class="image-item" />
-    </div>
-    <img src="@/assets/Qassitant.png" class="drag-icon" @mousedown="startDrag" v-if="!isOpen" alt="Drag Icon" />
-  </div>
-</template>
+
+    <img src="@/assets/Qassitant.png" class="drag-icon" @mousedown="startDrag"  alt="Drag Icon" />  
+  </div>  
+</template>    
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import useDocStore from '@/stores/document.js';
-import dragIcon from '@/assets/Qassitant.png'; // 导入自定义图标
 
 const docStore = useDocStore();
 const isOpen = ref(false); // 控制折叠状态
+const isOpen2 = ref(false); // 控制折叠状态
+const Modenow = ref(0);
 const position = reactive({ x: 0, y: 0 }); // 初始化拖动位置
-const marginThreshold = 30; // 定义吸附边框的距离阈值
+const marginThreshold = 120; // 定义吸附边框的距离阈值
+
+const deleteImage = (index) => {  
+  if(Modenow.value === 1){
+    docStore.deleteImage(index); // 调用 store 中的删除方法 
+  } else if(Modenow.value === 2){
+    docStore.deleteImage2D(index); // 调用 store 中的删除方法 
+  }
+  console.log("delete : ", index)
+};  
 
 // 初始化组件位置，居中
 onMounted(() => {
@@ -28,8 +58,14 @@ onMounted(() => {
   position.y = 100; // 你可以根据需要调整垂直位置
 });
 
-const toggleGallery = () => {
-  isOpen.value = !isOpen.value; // 切换折叠状态
+const toggleGallery = (mode) => {
+  Modenow.value = mode
+  if(mode === 1){
+    isOpen.value = !isOpen.value; // 切换折叠状态
+  } else if(mode === 2) {
+    isOpen2.value = !isOpen2.value; 
+  }
+  
 };
 
 const startDrag = (event) => {
@@ -79,16 +115,52 @@ const startDrag = (event) => {
   margin-right: 5px;
 }
 
-.image-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
+.image-gallery-container {  
+  padding: 10px;  
+  border-radius: 12px;  
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  
+  background-color: var(--love);  
+  color: var(--white);
+}  
 
-.image-item {
-  max-width: 200px; /* 设置图像最大宽度 */
-  margin: 10px; /* 设置图像间距 */
-}
+.image-gallery {  
+  display: flex;  
+  flex-wrap: wrap;  
+}  
+
+.image-item-container {  
+  position: relative;  
+  display: inline-block;  
+  margin: 10px;  
+}  
+
+.image-item {  
+  max-width: 150px; /* 设置图片最大宽度 */  
+  max-height: 150px; /* 设置图片最大高度 */  
+  border-radius: 8px; /* 圆角效果 */  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 图片阴影效果 */  
+}  
+
+.delete-button {  
+  position: absolute;  
+  top: 5px;  
+  right: 5px;  
+  background-color: rgba(255, 0, 0, 0.7);  
+  color: white;  
+  border: none;  
+  border-radius: 50%;  
+  width: 25px;  
+  height: 25px;  
+  cursor: pointer;  
+  font-size: 18px;  
+  line-height: 25px; /* 垂直居中 */  
+  text-align: center;  
+  transition: background-color 0.3s;  
+}  
+
+.delete-button:hover {  
+  background-color: rgba(255, 0, 0, 1); /* 悬停时加深颜色 */  
+}  
 
 .drag-icon {
   position: absolute;

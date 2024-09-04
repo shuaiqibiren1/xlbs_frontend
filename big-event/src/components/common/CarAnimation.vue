@@ -71,7 +71,7 @@
     background-color: var(--miniMask);
 }
 
-.car-container:hover,
+
 
 @keyframes drive {
   0% { transform: translateX(-50px); }

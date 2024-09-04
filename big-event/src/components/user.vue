@@ -209,18 +209,6 @@
       </div>
     </div>
 
-
-
-      <!-- <div v-if="imagesresult.length">
-        <h3>上传的文件</h3>
-        <div v-for="(item, index) in imagesresult" :key="item.id" class="card">
-          <div class="card-content">
-            <p>{{ item.fileName }}</p>
-            <el-button type="danger" @click="deleteItem(item.id, index)">删除</el-button>
-          </div>
-        </div>
-      </div> -->
-
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="confirmModification">确认</el-button>

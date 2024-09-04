@@ -100,7 +100,11 @@
 import { ref, onMounted } from "vue";
 import * as niivue from "@niivue/niivue";
 import useImageStore from '@/stores/images.js'; 
+import { useTokenStore } from '@/stores/token.js';
+import useDocStore from '@/stores/document.js';
 
+const docStore = useDocStore();
+const tokenStore = useTokenStore();
 const imageStore = useImageStore();
 
 const isTouchDevice =
@@ -175,6 +179,7 @@ async function onButtonClick(event) {
     }
     if (event.target.id === "SaveBitmap") {
       nv1.saveScene("ScreenShot.png");
+      uploadCanvasImage();
       return;
     }
     if (event.target.id === "ShowHeader") {
@@ -314,6 +319,50 @@ async function onButtonClick(event) {
       toggleGroup(event.target.id);
     } //drag mode
   } // onButtonClick()
+
+const uploadCanvasImage = async () => {  
+  try {  
+    const canvas = document.getElementById('gl1');  
+    if (!canvas) {  
+      throw new Error('Canvas not found');  
+    }  
+
+    nv1.drawScene();
+    canvas.toBlob(async (blob) => {  
+      if (!blob) {  
+        throw new Error('Failed to create blob from canvas image');  
+      }  
+
+      const file = new File([blob], 'canvas-image.png', { type: 'image/png' });  
+      const formData = new FormData();  
+      formData.append('file', file);  
+
+      try {  
+        const response = await fetch('/api/niiupload', {  
+          method: 'POST',  
+          headers: {  
+            'Authorization': tokenStore.token,  
+          },  
+          body: formData,  
+        });  
+
+        if (!response.ok) {  
+          throw new Error('Upload failed');  
+        }  
+
+        const jsonResponse = await response.json(); // 修改变量名以避免冲突  
+        docStore.addImage(jsonResponse.data); // 确保使用正确的响应数据  
+        console.log("docStore images : ", docStore.images);  
+        console.log('上传成功:', jsonResponse.data); // 调试输出  
+      } catch (err) {  
+        console.log('上传失败:', err.message); // 使用 err.message 而不是 response.message  
+      }  
+    }, 'image/png');  
+  } catch (error) {  
+    console.error('Error in uploadCanvasImage:', error.message); // 捕获并输出外层 try-catch 的错误  
+  }  
+};
+
 
 </script>
 
