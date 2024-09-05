@@ -51,4 +51,5 @@ const canvas2PDF = (canvas) => {
 
     PDF.save("心脏诊疗报告.pdf"); // 保存 PDF 文件  
     console.log("成功下载文件");
+    console.log("page Height : " + imgHeight);
 };

@@ -9,7 +9,7 @@
       <div class="image-gallery">  
         <div v-for="(image, index) in docStore.images" :key="index" class="image-item-container">  
           <img :src="image" alt="Uploaded Image" class="image-item" />  
-          <button @click="deleteImage(index)" class="delete-button">×</button>  
+          <button @click="deleteImage(1,index)" class="delete-button">×</button>  
         </div>  
       </div>  
     </div>  
@@ -23,7 +23,7 @@
       <div class="image-gallery">  
         <div v-for="(image, index) in docStore.images2D" :key="index" class="image-item-container">  
           <img :src="image" alt="Uploaded Image" class="image-item" />  
-          <button @click="deleteImage(index)" class="delete-button">×</button>  
+          <button @click="deleteImage(2,index)" class="delete-button">×</button>  
         </div>  
       </div>  
     </div>
@@ -39,14 +39,13 @@ import useDocStore from '@/stores/document.js';
 const docStore = useDocStore();
 const isOpen = ref(false); // 控制折叠状态
 const isOpen2 = ref(false); // 控制折叠状态
-const Modenow = ref(0);
 const position = reactive({ x: 0, y: 0 }); // 初始化拖动位置
 const marginThreshold = 120; // 定义吸附边框的距离阈值
 
-const deleteImage = (index) => {  
-  if(Modenow.value === 1){
+const deleteImage = (mode,index) => {  
+  if(mode === 1){
     docStore.deleteImage(index); // 调用 store 中的删除方法 
-  } else if(Modenow.value === 2){
+  } else if(mode === 2){
     docStore.deleteImage2D(index); // 调用 store 中的删除方法 
   }
   console.log("delete : ", index)
@@ -59,7 +58,6 @@ onMounted(() => {
 });
 
 const toggleGallery = (mode) => {
-  Modenow.value = mode
   if(mode === 1){
     isOpen.value = !isOpen.value; // 切换折叠状态
   } else if(mode === 2) {

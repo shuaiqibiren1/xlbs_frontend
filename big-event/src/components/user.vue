@@ -138,11 +138,13 @@
     </el-dialog>
 
 
-    <el-dialog
-      :title="patientInfo ? patientInfo.username : ''"
-      v-model="dialogVisible"
-    >
-      <el-form :model="form">
+    <el-dialog  
+      :title="patientInfo ? patientInfo.username : ''"  
+      v-model="dialogVisible"  
+    > 
+
+    <div style="background-color: white; padding: 10px;"> </div>
+      <el-form >
         <el-form-item label="评论" :label-width="formLabelWidth">
           <el-input v-model="patientInfo.comment" autocomplete="off"></el-input>
         </el-form-item>
@@ -210,10 +212,11 @@
     </div>
 
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="confirmModification">确认</el-button>
         <el-button type="danger" @click="handleDeletePatient">删除</el-button>
       </template>
+      
     </el-dialog>
 
     <!-- 添加新病人的对话框 -->
@@ -543,6 +546,8 @@ async function handleResourceClick(id) {
 
 
 <style scoped>
+
+
   .edit-area {
     padding: 10px;
     border: 1px solid #ccc;
