@@ -19,6 +19,8 @@
     "element-plus": "^2.4.1",
     "fflate": "0.8.2",
     "gl-matrix": "^3.4.3",
+    "highlight": "^0.2.4",
+    "highlight.js": "^11.10.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",

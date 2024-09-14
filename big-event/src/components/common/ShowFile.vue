@@ -15,9 +15,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import useFilesInfoStore from '@/stores/files.js';
 import useImageStore from '@/stores/images.js';
+import useUserInfoStore from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+const userInfo = ref({ ...userInfoStore.info });
 
 const filesInfoStore = useFilesInfoStore();
 const filesInfo = computed(() => filesInfoStore.infos);
@@ -28,6 +31,15 @@ const imageStore = useImageStore();
 const handleFileClick = (id) => {
   selectedId.value = id;
 };
+
+const loadfilesInfo = () => {
+  filesInfoStore.fetchInfos(userInfo.value.id)
+}
+
+onMounted(() => {
+  loadfilesInfo();
+});
+
 
 const confirmSelection = async () => {
   if (selectedId.value) {

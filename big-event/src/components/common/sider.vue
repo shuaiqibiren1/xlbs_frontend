@@ -1,69 +1,144 @@
-<template>  
-  <div class="collapsible-gallery" :style="{ left: `${position.x}px`, top: `${position.y}px` }">  
-    <div class="toggle-area" @click="toggleGallery(1)">  
-      <span class="toggle-icon" v-if="!isOpen">▶</span>  
-      <span class="toggle-icon" v-else>▼</span>  
-      <span class="toggle-text">{{ isOpen ? '收起' : '展开' }} 3维图片</span>  
-    </div>  
-    <div v-if="isOpen" class="image-gallery-container">  
-      <div class="image-gallery">  
-        <div v-for="(image, index) in docStore.images" :key="index" class="image-item-container">  
-          <img :src="image" alt="Uploaded Image" class="image-item" />  
-          <button @click="deleteImage(1,index)" class="delete-button">×</button>  
-        </div>  
-      </div>  
-    </div>  
-
-    <div class="toggle-area" @click="toggleGallery(2)">  
-      <span class="toggle-icon" v-if="!isOpen2">▶</span>  
-      <span class="toggle-icon" v-else>▼</span>  
-      <span class="toggle-text">{{ isOpen ? '收起' : '展开' }} 2维图片</span>  
-    </div>  
-    <div v-if="isOpen2" class="image-gallery-container">  
-      <div class="image-gallery">  
-        <div v-for="(image, index) in docStore.images2D" :key="index" class="image-item-container">  
-          <img :src="image" alt="Uploaded Image" class="image-item" />  
-          <button @click="deleteImage(2,index)" class="delete-button">×</button>  
-        </div>  
-      </div>  
+<template>
+  <div class="collapsible-gallery" :style="{ left: `${position.x}px`, top: `${position.y}px` }">
+    <div class="toggle-area" @click="toggleGallery(1)">
+      <span class="toggle-icon" v-if="!isOpen">▶</span>
+      <span class="toggle-icon" v-else>▼</span>
+      <span class="toggle-text">{{ isOpen ? '收起' : '展开' }} 3维图片</span>
+    </div>
+    <div v-if="isOpen" class="image-gallery-container">
+      <div class="image-gallery">
+        <div v-for="(image, index) in docStore.images" :key="index" class="image-item-container">
+          <img :src="image" alt="Uploaded Image" class="image-item" />
+          <button @click="deleteImage(1,index)" class="delete-button">×</button>
+        </div>
+      </div>
     </div>
 
-    <img src="@/assets/Qassitant.png" class="drag-icon" @mousedown="startDrag"  alt="Drag Icon" />  
-  </div>  
-</template>    
+    <div class="toggle-area" @click="toggleGallery(2)">
+      <span class="toggle-icon" v-if="!isOpen2">▶</span>
+      <span class="toggle-icon" v-else>▼</span>
+      <span class="toggle-text">{{ isOpen2 ? '收起' : '展开' }} 2维图片</span>
+    </div>
+    <div v-if="isOpen2" class="image-gallery-container">
+      <div class="image-gallery">
+        <div v-for="(image, index) in docStore.images2D" :key="index" class="image-item-container">
+          <img :src="image" alt="Uploaded Image" class="image-item" />
+          <button @click="deleteImage(2,index)" class="delete-button">×</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toggle-area" @click="toggleGallery(3)">
+      <span class="toggle-icon" v-if="!isOpen3">▶</span>
+      <span class="toggle-icon" v-else>▼</span>
+      <span class="toggle-text">{{ isOpen3 ? '收起' : '展开' }} 选择图片</span>
+    </div>
+    <div v-if="isOpen3" class="image-gallery-container">
+      <div class="image-gallery">
+        <div v-for="(file, index) in filesInfo" :key="file.id" class="image-item-container">
+          <img :src="file.url" alt="Uploaded Image" class="image-item" @click="ChooseImage(file.filePath)"/>
+          <div class="card-title">
+          {{ file.fileName }}
+          </div>
+          <button @click="deleteImage(3,index)" class="delete-button">×</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 可拖拽的图标，点击时显示气泡 -->
+    <img
+      src="@/assets/Qassitant.png"
+      class="drag-icon"
+      @mousedown="startDrag"
+      @click="togglePopover"
+      alt="Drag Icon"
+    />
+
+    <!-- 气泡弹出框 -->
+    <el-popover
+      v-model:visible="showPopover"
+      :width="500"
+      popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;"
+    >
+      <template #reference>
+        <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" />
+      </template>
+      <template #default>
+        <div class="demo-rich-content" style="display: flex; gap: 16px; flex-direction: column">
+          <el-avatar :size="60" src="https://avatars.githubusercontent.com/u/72015883?v=4" style="margin-bottom: 8px" />
+          <div class="popover-content" >
+            <!-- 显示当前图片 -->
+            <img :src="images[currentImageIndex]" alt="指导图片" class="popover-image"/>
+          </div>
+          <!-- 图片切换按钮 -->
+          <div class="image-controls">
+            <el-button size="small" @click="prevImage" :disabled="currentImageIndex === 0">
+              上一张
+            </el-button>
+            <el-button size="small" @click="nextImage" :disabled="currentImageIndex === images.length - 1">
+              下一张
+            </el-button>
+          </div>
+        </div>
+      </template>
+    </el-popover>
+  </div>
+</template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed, watch } from 'vue';
 import useDocStore from '@/stores/document.js';
+import { useRoute, onBeforeRouteUpdate } from 'vue-router';
+import image1 from '@/assets/10-240H6151512.jpg';
+import image2 from '@/assets/iu.png';
+import useFilesInfoStore from '@/stores/files.js';
+import { ElMessage } from 'element-plus'
+import useImageStore from '@/stores/images.js';
+const imageStore = useImageStore();
+
+const filesInfoStore = useFilesInfoStore();
+const filesInfo = computed(() => filesInfoStore.infos);
 
 const docStore = useDocStore();
-const isOpen = ref(false); // 控制折叠状态
-const isOpen2 = ref(false); // 控制折叠状态
-const position = reactive({ x: 0, y: 0 }); // 初始化拖动位置
-const marginThreshold = 120; // 定义吸附边框的距离阈值
+const isOpen = ref(false);
+const isOpen2 = ref(false);
+const isOpen3 = ref(false);
+const position = reactive({ x: 0, y: 0 });
+const marginThreshold = 120;
 
-const deleteImage = (mode,index) => {  
-  if(mode === 1){
-    docStore.deleteImage(index); // 调用 store 中的删除方法 
-  } else if(mode === 2){
-    docStore.deleteImage2D(index); // 调用 store 中的删除方法 
+const deleteImage = (mode, index) => {
+  if (mode === 1) {
+    docStore.deleteImage(index);
+  } else if (mode === 2) {
+    docStore.deleteImage2D(index);
+  } else if (mode === 3) {
+    filesInfoStore.deleteInfo(index);
   }
-  console.log("delete : ", index)
-};  
+};
 
-// 初始化组件位置，居中
+const ChooseImage = (niiurl) => {
+  imageStore.setniiImgUrl(niiurl);
+  console.log(imageStore.niiImgUrl)
+  ElMessage.success("修改成功")
+}
+
 onMounted(() => {
-  position.x = (window.innerWidth / 2) - 60; // 将组件初始位置设置在水平居中，调整偏移量以居中
-  position.y = 100; // 你可以根据需要调整垂直位置
+  position.x = (window.innerWidth / 2) - 60;
+  position.y = 100;
 });
 
 const toggleGallery = (mode) => {
-  if(mode === 1){
-    isOpen.value = !isOpen.value; // 切换折叠状态
-  } else if(mode === 2) {
-    isOpen2.value = !isOpen2.value; 
+  if (mode === 1) {
+    isOpen.value = !isOpen.value;
+  } else if (mode === 2) {
+    isOpen2.value = !isOpen2.value;
+  } else if (mode === 3) {
+    isOpen3.value = !isOpen3.value;
   }
-  
+};
+
+const togglePopover = (event) => {
+  event.stopPropagation();
 };
 
 const startDrag = (event) => {
@@ -74,16 +149,14 @@ const startDrag = (event) => {
     position.x = e.clientX - initialX;
     position.y = e.clientY - initialY;
 
-    // 获取窗口尺寸
     const windowWidth = window.innerWidth;
 
-    // 处理水平边框吸附
     if (position.x < marginThreshold) {
-      position.x = 0; // 吸附到左边框
-      isOpen.value = false; // 靠近左边自动收起
+      position.x = 0;
+      isOpen.value = false;
     } else if (position.x > windowWidth - marginThreshold) {
-      position.x = windowWidth - marginThreshold; // 吸附到右边框
-      isOpen.value = false; // 靠近右边自动收起
+      position.x = windowWidth - marginThreshold;
+      isOpen.value = false;
     }
   };
 
@@ -95,9 +168,65 @@ const startDrag = (event) => {
   window.addEventListener('mousemove', onMouseMove);
   window.addEventListener('mouseup', onMouseUp);
 };
+
+const showPopover = ref(false);
+const currentImageIndex = ref(0);
+
+const route = useRoute();
+
+const images = computed(() => {
+  switch (route.path) {
+    case '/demo':
+      return [image1, image2];
+    case '/home':
+      return [image1, image2];
+    default:
+      return [];
+  }
+});
+
+// 当路由改变时重置图片索引为 0
+onBeforeRouteUpdate(() => {
+  currentImageIndex.value = 0;
+});
+
+const prevImage = () => {
+  if (currentImageIndex.value > 0) {
+    currentImageIndex.value--;
+  }
+};
+
+const nextImage = () => {
+  if (currentImageIndex.value < images.value.length - 1) {
+    currentImageIndex.value++;
+  }
+};
 </script>
 
+
 <style>
+/* 气泡 */
+.popover-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%px; /* 固定宽度 */
+  height: 300px; /* 固定高度 */
+  overflow: auto; /* 超出内容时显示滚动条 */
+}
+
+.popover-image {
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.image-controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* 气泡-over */
 .collapsible-gallery {
   position: absolute; /* 允许通过拖动改变位置 */
   margin: 20px;
@@ -111,6 +240,17 @@ const startDrag = (event) => {
 
 .toggle-icon {
   margin-right: 5px;
+}
+
+.card-title {
+  color: black;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: all .2s ease-in-out;
 }
 
 .image-gallery-container {  

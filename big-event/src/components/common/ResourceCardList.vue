@@ -9,7 +9,7 @@
                   v-once
                   lazy
                   :src="resourcePath.cover"
-                  fit="cover">
+                  fit="cover"> 
           <template #error>
             <div class="image-slot myCenter" style="background-color: var(--lightGreen)">
               <div class="error-text">
@@ -150,7 +150,7 @@ function getDateDiff(date) {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    /* -webkit-line-clamp: 2; */
     -webkit-box-orient: vertical;
     letter-spacing: 1px;
   }

@@ -31,3 +31,8 @@ export const ImagesService = (imgId) => {
     const params = new URLSearchParams(imgId).toString();
     return request.get(`/getImage?${params}`);
 };
+
+export const ModelImagesService = (imgId) => {
+    const params = new URLSearchParams(imgId).toString();
+    return request.get(`model/getImagem?${params}`);
+};

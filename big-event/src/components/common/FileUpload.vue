@@ -5,7 +5,7 @@
       <el-upload
         class="upload-area"
         drag
-        action="/api/uploadnii"
+        :action="`/api/model/uploadurlbyidm?id=${userInfo.id}`"
         :multiple="true"
         :show-file-list="true"
         :headers="{'Authorization': tokenStore.token}"
@@ -20,9 +20,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import { useTokenStore } from '@/stores/token.js';
 const tokenStore = useTokenStore();
+import useUserInfoStore from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+const userInfo = ref({ ...userInfoStore.info });
 
 
 const showUploadArea = ref(false);

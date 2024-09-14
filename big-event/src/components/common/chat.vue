@@ -8,8 +8,8 @@
           class="message"   
           :class="{ 'user-message': msg.isUser }"  
         >  
-          <span v-if="msg.isUser">{{ msg.text }}</span>  
-          <span v-else v-html="msg.text"></span> <!-- 修正为使用 span 标签关闭 v-html -->
+          <span class="markdown-content" v-if="msg.isUser">{{ msg.text }}</span>  
+          <span class="markdown-content" v-else v-html="msg.text"></span> <!-- 修正为使用 span 标签关闭 v-html -->
         </div>  
       </div>  
     </div>  
@@ -57,6 +57,8 @@ const sendMessage = async () => {
 </script>  
 
 <style scoped>  
+@import url(../../assets/css/markdown-highlight.css);
+
 .chat-container {  
   width: 800px;  
   margin: auto;

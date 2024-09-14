@@ -41,6 +41,12 @@ importers:
       gl-matrix:
         specifier: ^3.4.3
         version: 3.4.3
+      highlight:
+        specifier: ^0.2.4
+        version: 0.2.4
+      highlight.js:
+        specifier: ^11.10.0
+        version: 11.10.0
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
@@ -1661,6 +1667,14 @@ packages:
   he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
+
+  highlight.js@11.10.0:
+    resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
+    engines: {node: '>=12.0.0'}
+
+  highlight@0.2.4:
+    resolution: {integrity: sha512-TEcWU6BolpDYIaVD91KmaYe/kRZwOmQlLWZGO8DK+Cs555+7mawk2KUnF/dBwcLnrvlCDk/xC+BXfz7Zva+Jfg==}
+    deprecated: Not maintained anymore
 
   html-encoding-sniffer@3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
@@ -4533,6 +4547,10 @@ snapshots:
       function-bind: 1.1.2
 
   he@1.2.0: {}
+
+  highlight.js@11.10.0: {}
+
+  highlight@0.2.4: {}
 
   html-encoding-sniffer@3.0.0:
     dependencies:

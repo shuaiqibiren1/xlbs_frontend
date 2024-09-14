@@ -186,22 +186,6 @@ input[type="range"]::-webkit-slider-thumb {
   margin-top: 20px;
 }
 
-/*
-.colormap-button {
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.colormap-button:hover {
-  background-color: #ddd;
-  border-color: #bbb;
-}
-*/
-
 .colormap-button {
   background-color: #f0f0f0;
   color: #333;

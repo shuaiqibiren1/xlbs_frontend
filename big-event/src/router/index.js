@@ -9,9 +9,11 @@ import ChatVue from '@/components/gpt.vue'
 import NiiVue from '@/components/niishow.vue'
 import usePatientsInfoStore from '@/stores/patients.js'
 
+
 import feature1 from '@/components/niimain/feature1.vue'
 import feature2 from '@/components/niimain/feature2.vue'
 import feature3 from '@/components/niimain/feature3.vue'
+
 
 // 定义了一组路由配置，并使用 Vue Router 创建一个路由器实例。在 Vue.js 应用中，路由用于管理不同页面（或组件）之间的导航。
 const routes = [

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import heartimg from '@/assets/heart.png';
-import { ImagesService } from '@/api/upload';
+import { ImagesService, ModelImagesService } from '@/api/upload';
 
 const useImageStore = defineStore('images', () => {
     // 定义状态
@@ -45,7 +45,7 @@ const useImageStore = defineStore('images', () => {
         console.log('ImageId is :', Id);
         console.log('segImgId.value :');
         try {
-            const response = await ImagesService(Id);
+            const response = await ModelImagesService(Id);
             console.log('API Response:', response);  // 调试输出
             if (response.code === 0) {  // 确保响应成功
                 const imageUrls = response.data;

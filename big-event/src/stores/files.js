@@ -7,6 +7,7 @@ const useFilesInfoStore = defineStore('files', () => {
 
     // 获取用户信息并更新 store
     const fetchInfos = async (userid) => {
+        infos.value = [];
         const Id = {
             id: userid
         };
@@ -37,7 +38,30 @@ const useFilesInfoStore = defineStore('files', () => {
         infos.value = []
     }
 
-    return { infos, setInfo, removeInfo, fetchInfos, clearUserData }
+    const deleteInfo = async (index) => {
+        const data = {
+            fileId: infos.value[index].id
+        };
+
+        try {
+            const result = await deleteFileService(data);
+
+            if (result.code === 0) {
+                // 成功删除文件后更新状态  
+                console.log(result.message);
+                // 从 infos 中删除文件  
+                infos.value.splice(index, 1);
+            } else {
+                console.error('Error deleting file:', result.message);
+            }
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+    };
+
+
+
+    return { infos, setInfo, removeInfo, fetchInfos, clearUserData, deleteInfo }
 }, { persist: true })
 
 export default useFilesInfoStore

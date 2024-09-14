@@ -128,18 +128,18 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { ElAvatar } from 'element-plus';
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';  
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// import * as THREE from 'three';
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';  
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import FileUpload from '@/components/common/FileUpload.vue';
-import IU from '@/assets/iu.png';
-import HEART from '@/assets/heartomg.gif';
+// import IU from '@/assets/iu.png';
+// import HEART from '@/assets/heartomg.gif';
 import ShowFile from '@/components/common/ShowFile.vue';
 import useDocStore from '@/stores/document.js';   
 import SunflowerIcon from '@/assets/Sunflower.png';
 import YitaoIcon from '@/assets/yitao.png';
 import EliIcon from '@/assets/eli.png'
-import Putao from '@/assets/putao.png'
+// import Putao from '@/assets/putao.png'
 // 文心
 import { ChatService } from '@/api/wenxin';  
 import { marked } from 'marked'; 
@@ -149,7 +149,7 @@ const visible = computed(() => store.state.visible);
 const asideshow = computed(() => store.state.asideshow);
 const docStore = useDocStore();  
 // Sider
-import Sider from '@/components/common/sider.vue'
+// import Sider from '@/components/common/sider.vue'
 
 // 使用userinfo仓库
 import useUserInfoStore from '@/stores/userInfo.js'
@@ -188,22 +188,31 @@ const cards = [
   },
   {
     id: 3,
-    title: 'Total Cardiotomy',
+    title: ' Single Segmentation',
     icon: EliIcon, // Use the imported image
-    description: "3D reconstruction of cardiac images from CT NII images.",
+    description: "Registration-based Single Sample Segmentation of Cardiac NII Images.",
     buttons: [
-      { label: 'Action 3-1', action: 'Action3_1' },
-      { label: 'Action 3-2', action: 'Action3_2' }
+      { label: '基于配准的单样本切割', action: 'Action3_1' },
     ]
   },
   {
     id: 4,
+    title: 'Total Cardiotomy',
+    icon: EliIcon, // Use the imported image
+    description: "Detection of cardiac scars using CT NII images.",
+    buttons: [
+      { label: '全心脏分割', action: 'Action4_1' },
+      { label: '下载切割后图像', action: 'Action4_2' }
+    ]
+  },
+  {
+    id: 5,
     title: 'Scar Detection',
     icon: EliIcon, // Use the imported image
     description: "Detection of cardiac scars using CT NII images.",
     buttons: [
-      { label: 'Action 4-1', action: 'Action4_1' },
-      { label: 'Action 4-2', action: 'Action4_2' }
+      { label: '心脏疤痕切割', action: 'Action5_1' },
+      { label: '下载切割后图像', action: 'Action5_2' }
     ]
   }
 ];
@@ -216,9 +225,79 @@ const toggleDropdown = (menuId) => {
 
 const isOpen = (menuId) => openedMenus.value === menuId;  
 
-const executeAction = (actionName) => {
-  if(actionName === 'Action1_1'){
+// 模型接口
+import { ModelheartsegService,ModelheartscarService,AddFileService } from '@/api/model.js'; // 替换为实际路径  
+import useImageStore from '@/stores/images.js'; // 导入Pinia store
+const imageStore = useImageStore();
 
+const HeartSegModel = async (serviceName) => {  
+  try {  
+    const params = {  
+      niiUrl: imageStore.niiImgUrl, 
+      Service: serviceName,
+    };  
+    console.log("params : ", params)
+    const response = await ModelheartsegService(params);  
+    console.log('API Response:', response); 
+    if (response.code === 0) {  // 确保响应成功
+        const imageUrls = response.data;
+        imageUrls.forEach(url => {
+            imageStore.addImage(url);
+        });
+    } else {
+        console.error('Error fetching images:', response.message);
+    }
+  } catch (error) {  
+    console.error('Error fetching heart segmentation model:', error);  
+  }  
+}; 
+
+const HeartScarModel = async (serviceName) => {  
+  try {  
+    const params = {  
+      niiUrl: imageStore.niiImgUrl, 
+      Service: serviceName, 
+    };  
+    console.log("params : ", params)
+    const response = await ModelheartscarService(params);  
+    console.log('API Response:', response); 
+    if (response.code === 0) {  // 确保响应成功
+        const imageUrl = response.data;
+        console.log("Heart Scar Model imageUrl : ",imageUrl);
+    } else {
+        console.error('Error fetching images:', response.message);
+    }
+  } catch (error) {  
+    console.error('Error fetching heart segmentation model:', error);  
+  }  
+}; 
+
+const AddFileByURL = async (fileurl) => {
+  const urldata = {
+    url: fileurl
+  }
+  try {
+    const response = await AddFileService(urldata);
+    console.log('API Response:', response); 
+    if (response.code === 0) {  // 确保响应成功
+        console.log("data : ",response.data);
+    } else {
+        console.error('Error fetching  : ', response.message);
+    }
+  } catch (error){
+    console.error('Error  :', error);  
+  }
+}
+
+// 模型接口 over
+
+const executeAction = async (actionName) => {
+  if(actionName === 'Action3_1'){
+    await HeartSegModel("segmentation")
+  } else if (actionName === "Action4_1"){
+    await AddFileByURL("https://aircraft-1111.oss-cn-beijing.aliyuncs.com/4465158c-fd18-4dfc-97ef-25e651367f2b_heartTest.nii.gz");
+  }else if(actionName === 'Action5_1'){
+    await HeartScarModel("scar_detection")
   }
   
   activeButton.value = actionName;  
@@ -300,6 +379,8 @@ const sendMessage = async () => {
     }  
   }  
 };
+
+
 
 </script>
 

@@ -70,7 +70,8 @@
                 </div>
 
                 <div>
-                  <ImageDisplay v-if="visible.segwindows" />
+                  <!-- <ImageDisplay v-if="visible.segwindows" /> -->
+                   <ImageDisplay />
                 </div>
 
               </div>

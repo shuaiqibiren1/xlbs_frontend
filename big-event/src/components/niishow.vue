@@ -75,7 +75,7 @@ import { ref, computed, onMounted } from 'vue';
 import myFooter from '@/components/common/myFooter.vue';
 import loader from '@/components/common/loader.vue';
 import zombie from '@/components/common/zombie.vue';
-import myAside from '@/components/myAside.vue';
+// import myAside from '@/components/myAside.vue';
 import bgImage from '@/assets/bgimg.png';
 import Printer from '@/components/common/printer.vue';
 import Niivueviewer from '@/components/common/NiiVueViewer.vue'

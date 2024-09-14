@@ -19,13 +19,10 @@ export default defineConfig({
     proxy: {
       '/api': {//获取路径中包含了/api的请求
         target: 'http://localhost:8080',//后台服务所在的源
+        // target: 'http://159.75.116.168:8080',
         changeOrigin: true,//修改源
         rewrite: (path) => {
           const transformedPath = path.replace(/^\/api/, '');
-          //  rewrite: (path) => path.replace(/^\/api/, '')///api替换为''
-          // 这里不能直接用console.log，但你可以将路径发送到某个可以记录的地方  
-          // 例如，发送到一个API端点，或者写入到浏览器的localStorage中  
-          // 假设我们有一个记录路径的函数logTransformedPath  
           logTransformedPath(transformedPath);
           return transformedPath;
         }

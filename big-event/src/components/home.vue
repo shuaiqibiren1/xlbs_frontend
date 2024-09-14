@@ -156,22 +156,22 @@ watch(scrollTop, (newScrollTop, oldScrollTop) => {
   let isShow = newScrollTop - window.innerHeight > 30;
   toolButton.value = isShow;
 
-  // 动态调整 css 样式
-  const cdTopElement = document.querySelector('.cd-top');
+  // // 动态调整 css 样式
+  // const cdTopElement = document.querySelector('.cd-top');
 
-  if (cdTopElement) {
-    if (isShow) {
-      if (window.innerHeight > 950) {
-        cdTopElement.style.top = '0';
-      } else {
-        cdTopElement.style.top = `${window.innerHeight - 950}px`;
-      }
-    } else {
-      cdTopElement.style.top = '-900px';
-    }
-  } else {
-    console.warn("Element with class 'cd-top' not found.");
-  }
+  // if (cdTopElement) {
+  //   if (isShow) {
+  //     if (window.innerHeight > 950) {
+  //       cdTopElement.style.top = '0';
+  //     } else {
+  //       cdTopElement.style.top = `${window.innerHeight - 950}px`;
+  //     }
+  //   } else {
+  //     cdTopElement.style.top = '-900px';
+  //   }
+  // } else {
+  //   console.warn("Element with class 'cd-top' not found.");
+  // }
 
   // 导航栏显示与颜色
   let toolbarStatus = {
@@ -246,6 +246,11 @@ const handleCommand = (command)=>{
     // }
 }
 
+//
+const openNewPage = () => {
+  window.open('https://aircraft-carrier.github.io/categories/Learning/heartSeg/', '_blank');
+};
+
 </script>
 
 
@@ -279,20 +284,26 @@ const handleCommand = (command)=>{
 
             <li @click="router.push({path: '/'})">
               <div class="my-menu">
-                ❤️‍🔥 <span>demo</span>
+                ❤️‍🔥 <span>模型分割</span>
               </div>
             </li>
 
             <li @click="router.push({path: '/display'})">
               <div class="my-menu">
-                🔍 <span>NiiVueViewer</span>
+                🔍 <span>三维心脏视图</span>
               </div>
             </li>
 
             
             <li @click="router.push({path: '/chat'})">
               <div class="my-menu">
-                🤖 <span>chat</span>
+                🤖 <span>医疗报告生成</span>
+              </div>
+            </li>
+
+            <li @click="openNewPage">
+              <div class="my-menu">
+                📋 <span>参考文档</span>
               </div>
             </li>
 

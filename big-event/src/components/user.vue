@@ -1,4 +1,4 @@
-<!-- App.vue -->
+App.vue
 <template>
 <div>
     <!-- loader -->
@@ -115,13 +115,16 @@
 
     <!-- 弹窗 -->
     <el-dialog 
-      title="添加新的图像" 
       v-model="showDialog"
     >
+    <template #title>  
+      <span style="color: white;">添加新的图像</span>  
+    </template>  
+
       <div class="upload-center">
         <el-upload
           ref="dialogUploadRef"
-          :action="`/api/uploadurlbyid?id=${userInfo.id}`"
+          :action="`/api/model/uploadurlbyidm?id=${userInfo.id}`"
           :headers="{'Authorization': tokenStore.token}"
           drag
           list-type="picture-card"
@@ -141,6 +144,7 @@
     <el-dialog  
       :title="patientInfo ? patientInfo.username : ''"  
       v-model="dialogVisible"  
+
     > 
 
     <div style="background-color: white; padding: 10px;"> </div>
@@ -316,7 +320,7 @@ const loading = ref(false);
 const showAddPatientDialog = ref(false);
 
 const uploadUrl = computed(() => {
-  return `/api/uploadurlbyid?id=${patientInfo.value.id}`;
+  return `/api/model/uploadurlbyidm?id=${patientInfo.value.id}`;
 });
 // dialog over
 
@@ -365,10 +369,7 @@ const loadPatientsInfo = () => {
 
 // files-infos
 const loadfilesInfo = () => {
-  if(userInfo.value.identity === 'patient'){
-    filesInfoStore.fetchInfos(userInfo.value.id)
-  }
-  
+  filesInfoStore.fetchInfos(userInfo.value.id)
 }
 
 
@@ -389,7 +390,6 @@ onMounted(() => {
     loadfilesInfo();
     console.log("Get files details");
   }
-
 
 });
 
@@ -514,7 +514,8 @@ const handleDeletePatient = () => {
 
 const resourcePathList = computed(() => {
   return filesInfo.value.map((info, index) => ({
-    cover: info.url || 'https://aircraft-1111.oss-cn-beijing.aliyuncs.com/mr_train_1001_middle_slice.jpg',
+    cover: info.url ? info.url : 'https://aircraft-1111.oss-cn-beijing.aliyuncs.com/mr_train_1001_middle_slice.jpg',
+    // cover: info.url,
     title: info.fileName,
     introduction: '一个 nii 图像',
     recommendStatus: true,
@@ -527,6 +528,8 @@ const resourcePathList = computed(() => {
 import useImageStore from '@/stores/images.js'; // 导入Pinia store
 const imageStore = useImageStore();
 
+
+// 需要修改
 async function handleResourceClick(id) {
   console.log('Clicked image id:', id);
 
@@ -537,8 +540,6 @@ async function handleResourceClick(id) {
   router.push('/demo');  // 获取图片后跳转到/demo路由
 }
 
-
-
 </script>
 
 
@@ -546,7 +547,6 @@ async function handleResourceClick(id) {
 
 
 <style scoped>
-
 
   .edit-area {
     padding: 10px;
@@ -807,7 +807,7 @@ async function handleResourceClick(id) {
   .dialog-footer {
   text-align: right;
   }
-/*
+
   .cd-top {
     background: var(--toTop) no-repeat center;
     position: fixed;
@@ -820,7 +820,7 @@ async function handleResourceClick(id) {
     transition: all 0.5s ease-in-out;
     cursor: pointer;
   }
-*/
+
 
   @media screen and (max-width: 1100px) {
     .recent-posts {

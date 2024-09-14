@@ -1,9 +1,9 @@
 /* markdown样式 */
-.entry-content {
+.markdown-content {
     position: relative;
 }
 
-.entry-content blockquote {
+.markdown-content blockquote {
     margin: 0;
     padding: 15px 50px;
     position: relative;
@@ -11,7 +11,7 @@
     text-align: center;
 }
 
-.entry-content blockquote:before {
+.markdown-content blockquote:before {
     content: "\f10d";
     font-size: 1.5rem;
     position: absolute;
@@ -21,7 +21,7 @@
     font-family: FontAwesome;
 }
 
-.entry-content blockquote:after {
+.markdown-content blockquote:after {
     content: '\f10e';
     font-size: 1.5rem;
     position: absolute;
@@ -31,7 +31,7 @@
     font-family: FontAwesome;
 }
 
-.entry-content code:not(.hljs) {
+.markdown-content code:not(.hljs) {
     background: #fefac7;
     color: #e67474;
     word-break: break-word;
@@ -39,61 +39,61 @@
     border-radius: 5px;
 }
 
-.entry-content ul {
+.markdown-content ul {
     list-style: disc;
     padding: 0 10px 0 35px;
     color: var(--articleGreyFontColor);
     border-radius: 10px;
 }
 
-.entry-content ol {
+.markdown-content ol {
     list-style: decimal;
     padding: 0 10px 0 35px;
     color: var(--articleGreyFontColor);
     border-radius: 10px;
 }
 
-.entry-content ol li,
-.entry-content ul li {
+.markdown-content ol li,
+.markdown-content ul li {
     padding: 8px 0;
     Letter-spacing: 1px;
     line-height: 24px;
 }
 
-.entry-content h3 {
+.markdown-content h3 {
     padding-bottom: 8px;
     border-bottom: 1px dashed #ddd;
 }
 
-.entry-content h1,
-.entry-content h2,
-.entry-content h2,
-.entry-content h3,
-.entry-content h4 {
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
-.entry-content h2 {
+.markdown-content h2 {
     padding-left: 40px;
 }
 
-.entry-content h3 {
+.markdown-content h3 {
     padding-left: 20px;
     font-size: 22px;
 }
 
-.entry-content h4 {
+.markdown-content h4 {
     padding-left: 20px;
     font-size: 20px;
 }
 
-.entry-content h5 {
+.markdown-content h5 {
     font-size: 18px;
     padding-left: 28px;
 }
 
-.entry-content h2:before {
+.markdown-content h2:before {
     content: "🌺";
     position: absolute;
     left: 0;
@@ -101,7 +101,7 @@
     margin-top: -2px;
 }
 
-.entry-content h3:before {
+.markdown-content h3:before {
     content: "#";
     left: 0;
     position: absolute;
@@ -109,30 +109,30 @@
     color: #ff6d6d;
 }
 
-.entry-content h4:before {
+.markdown-content h4:before {
     content: "▌";
     left: 0;
     position: absolute;
     color: #ff6d6d;
 }
 
-.entry-content h5:before {
+.markdown-content h5:before {
     content: "🌷";
     left: 0;
     position: absolute;
 }
 
-.entry-content a {
+.markdown-content a {
     color: #e67474;
     position: relative;
     text-decoration: none;
 }
 
-.entry-content a:hover {
+.markdown-content a:hover {
     color: orange;
 }
 
-.entry-content a:after {
+.markdown-content a:after {
     content: '';
     position: absolute;
     width: 100%;
@@ -145,25 +145,25 @@
     transition: transform 0.25s ease-out;
 }
 
-.entry-content a:hover:after {
+.markdown-content a:hover:after {
     transform: scaleX(1);
     transform-origin: bottom left;
 }
 
-.entry-content p {
+.markdown-content p {
     color: var(--articleFontColor);
     line-height: 35px;
     word-break: break-word;
     font-size: 18px;
 }
 
-.entry-content hr {
+.markdown-content hr {
     margin-top: 20px;
     margin-bottom: 20px;
     border: 0.5px dashed #fc625d;
 }
 
-.entry-content img {
+.markdown-content img {
     max-width: 100%;
     border-radius: 5px;
 }
@@ -236,6 +236,7 @@
     z-index: 1;
 }
 
+/* highlight.js 样式 */
 .hljs {
     color: #a9b7c6;
     background: #1d1f21;
@@ -274,96 +275,26 @@
     background: #1d1f21;
 }
 
-.hljs-comment,
-.hljs-quote {
-    color: #888f96;
-    font-style: italic;
-}
-
-.hljs-doctag,
-.hljs-formula,
-.hljs-keyword {
-    color: #c678dd;
-}
-
-.hljs-deletion,
-.hljs-name,
-.hljs-section,
-.hljs-selector-tag,
-.hljs-subst {
-    color: #e06c75;
-}
-
-.hljs-literal {
-    color: #56b6c2;
-}
-
-.hljs-addition,
-.hljs-attribute,
-.hljs-meta-string,
-.hljs-regexp,
-.hljs-string {
-    color: #98c379;
-}
-
-.hljs-built_in,
-.hljs-class .hljs-title {
-    color: #e6c07b;
-}
-
-.hljs-attr,
-.hljs-number,
-.hljs-selector-attr,
-.hljs-selector-class,
-.hljs-selector-pseudo,
-.hljs-template-variable,
-.hljs-type,
-.hljs-variable {
-    color: #d19a66;
-}
-
-.hljs-bullet,
-.hljs-link,
-.hljs-meta,
-.hljs-selector-id,
-.hljs-symbol,
-.hljs-title {
-    color: #61aeee;
-}
-
-.hljs-emphasis {
-    font-style: italic;
-}
-
-.hljs-strong {
-    font-weight: 700;
-}
-
-.hljs-link {
-    text-decoration: underline;
-}
-
-
 /* 表格 */
 .table-wrapper::-webkit-scrollbar {
     height: 6px;
     width: 6px;
 }
 
-.table-wrapper > table {
+.table-wrapper>table {
     border-collapse: collapse;
 }
 
-.table-wrapper > table th {
+.table-wrapper>table th {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.table-wrapper > table tr:nth-child(2n) {
+.table-wrapper>table tr:nth-child(2n) {
     background-color: #f8f8f8;
 }
 
-.table-wrapper > table td,
-.table-wrapper > table th {
+.table-wrapper>table td,
+.table-wrapper>table th {
     padding: 8px 16px;
     border: 1px solid #dfe2e5;
     line-height: 1.5;
@@ -371,10 +302,10 @@
     text-align: center;
 }
 
-.table-wrapper > table tbody > tr {
+.table-wrapper>table tbody>tr {
     transition: all 0.28s ease;
 }
 
-.table-wrapper > table tbody > tr:hover {
+.table-wrapper>table tbody>tr:hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
