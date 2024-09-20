@@ -22,54 +22,57 @@
         </thead>
         <tbody>
           <tr>
-            <td>胸部疼痛类型</td>
-            <td>{{ docStore.heartParameters.cp }}</td>
-            <td>0-3</td>
-          </tr>
-          <tr>
-            <td>血压</td>
-            <td>{{ docStore.heartParameters.trestbps }} mmHg</td>
-            <td>90-140 mmHg</td>
-          </tr>
-          <tr>
-            <td>胆固醇</td>
-            <td>{{ docStore.heartParameters.chol }} mg/dL</td>
-            <td>125-200 mg/dL</td>
+            <td>心率</td>
+            <td>{{ docStore.heartParameters.thalach }} bpm</td>
+            <td>60~100 bpm</td>
           </tr>
           <tr>
             <td>空腹血糖</td>
-            <td>{{ docStore.heartParameters.fbs }} mg/dL</td>
-            <td>&lt;100 mg/dL</td>
+            <td>{{ docStore.heartParameters.fbs }} mmol/L</td>
+            <td>3.9~6.1mmol/L</td>
+          </tr>             
+          <tr>
+            <td>总胆固醇</td>
+            <td>{{ docStore.heartParameters.cp }}mmol/L</td>
+            <td>3~5.2 mmol/L</td>
           </tr>
+          <!-- 参考范围：3~5.2 mmol/L；边缘升高：≥5.2 mmol/L且＜6.2 mmol/L；升高：≥6.2 mmol/L。 -->
+          <tr>
+            <td>静脉压测定</td>
+            <td>{{ docStore.heartParameters.chol }} kPa</td>
+            <td>0.49-1.18kPa</td>
+          </tr>
+          <!-- CVP<0．49kPa表示血容量不足CVP>0．98kPa，则表示容量血管过度收缩或有心力衰竭的可能CVP＞1．47一1．96kPa表示有明显心力衰竭 -->
           <tr>
             <td>心电图结果</td>
             <td>{{ docStore.heartParameters.restecg === 0 ? '正常' : '反常' }}</td>
             <td>正常</td>
           </tr>
           <tr>
-            <td>最大心跳数</td>
-            <td>{{ docStore.heartParameters.thalach }} bpm</td>
-            <td>60-100 bpm</td>
+            <td>左心房体积</td>
+            <td>{{ docStore.heartParameters.oldpeak }}mm</td>
+            <td>25-35mm</td>
           </tr>
+          <tr>
+            <td>动脉血压测定</td>
+            <td>{{ docStore.heartParameters.trestbps }} mmHg</td>
+            <td>&lt;120/80mmHg</td>
+          </tr>
+          <!-- ＜120/80mmHg以下是正常血压，120-139/80-89mmHg是正常高值血压，≥140/90mmHg是高血压 -->
+          <tr>
+            <td>左心室射血分数</td>
+            <td>{{ docStore.heartParameters.ca }}</td>
+            <td>55-65%</td>
+          </tr> 
           <tr>
             <td>运动时是否有心绞痛</td>
             <td>{{ docStore.heartParameters.exang === 0 ? '否' : '是' }}</td>
             <td>否</td>
           </tr>
           <tr>
-            <td>ST segment 倾斜度</td>
-            <td>{{ docStore.heartParameters.oldpeak }}</td>
-            <td>0.0-2.5</td>
-          </tr>
-          <tr>
-            <td>透视检查看到的血管数</td>
-            <td>{{ docStore.heartParameters.ca }}</td>
-            <td>0-3</td>
-          </tr>
-          <tr>
-            <td>缺陷种类</td>
-            <td>{{ docStore.heartParameters.thal == 1 ? '正常' : "固定"}}</td>
-            <td>正常/固定/可逆</td>
+            <td>心肌疤痕/左心房体积比</td>
+            <td>{{ docStore.heartParameters.thal}}</td>
+            <td>&lt;5%</td>
           </tr>
         </tbody>
       </table>

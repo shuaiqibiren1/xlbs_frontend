@@ -156,7 +156,8 @@ const clearRegisterData = ()=>{
     background-color: #fff;
 
     .bg {
-        background: url('@/assets/heart2.png') no-repeat 60% center / 240px auto,
+        background: url('@/assets/heart2.png') no-repeat 10% 10% / 150px auto,
+            url('@/assets/logosss.png') no-repeat 60% 15% / 450px auto,
             url('@/assets/login_bg.jpg') no-repeat center / cover;
         border-radius: 0 20px 20px 0;
     }

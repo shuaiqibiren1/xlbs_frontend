@@ -9,7 +9,7 @@ const useImageStore = defineStore('images', () => {
     const segImgId = ref(0);
     // const niiImgUrl = ref('https://cdn.jsdelivr.net/gh/Aircraft-carrier/PicGOO/images/mni152.nii.gz');
     const niiImgUrl = ref('https://aircraft-1111.oss-cn-beijing.aliyuncs.com/a7e44048-f99a-4e5c-a8eb-3bec5dbfaf95_mr_train_1001_label.nii.gz');
-
+    const maskNiiImageUrl = ref('');
     // 实时获取图片数组的计算属性
     const imageList = computed(() => images.value);
 
@@ -22,6 +22,10 @@ const useImageStore = defineStore('images', () => {
     const setImgId = (id) => {
         segImgId.value = id;
     };
+
+    const setMaskniiImgUrl = (url) => {
+        maskNiiImageUrl.value = url;
+    }
 
     // 移除所有图片的方法
     const removeImage = () => {
@@ -61,7 +65,7 @@ const useImageStore = defineStore('images', () => {
         }
     };
 
-    return { imageList, segImgId, niiImgUrl, addImage, removeImage, setImgId, fetchImages, setniiImgUrl };
+    return { imageList, maskNiiImageUrl, segImgId, niiImgUrl, addImage, removeImage, setImgId, fetchImages, setniiImgUrl, setMaskniiImgUrl };
 }, { persist: true });
 
 export default useImageStore;

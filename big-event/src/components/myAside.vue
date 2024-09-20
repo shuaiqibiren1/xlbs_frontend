@@ -174,21 +174,21 @@ const activeButton = ref(null);
 const cards = [
   {
     id: 1,
-    title: 'Upload Image',
+    title: '上传图片',
     icon: SunflowerIcon, // Use the imported image
     description: "Please upload CT or MR NIfTI images.",
     buttons: []
   },
   {
     id: 2,
-    title: 'Files',
+    title: '文件列表',
     icon: YitaoIcon, // Use the imported image
     description: "Please select a NIfTI image for slicing.",
     buttons: []
   },
   {
     id: 3,
-    title: ' Single Segmentation',
+    title: '单样本切割',
     icon: EliIcon, // Use the imported image
     description: "Registration-based Single Sample Segmentation of Cardiac NII Images.",
     buttons: [
@@ -197,21 +197,21 @@ const cards = [
   },
   {
     id: 4,
-    title: 'Total Cardiotomy',
+    title: '全心脏分割',
     icon: EliIcon, // Use the imported image
     description: "Detection of cardiac scars using CT NII images.",
     buttons: [
-      { label: '全心脏分割', action: 'Action4_1' },
+      { label: '分割', action: 'Action4_1' },
       { label: '下载切割后图像', action: 'Action4_2' }
     ]
   },
   {
     id: 5,
-    title: 'Scar Detection',
+    title: '心脏疤痕切割',
     icon: EliIcon, // Use the imported image
     description: "Detection of cardiac scars using CT NII images.",
     buttons: [
-      { label: '心脏疤痕切割', action: 'Action5_1' },
+      { label: '分割', action: 'Action5_1' },
       { label: '下载切割后图像', action: 'Action5_2' }
     ]
   }

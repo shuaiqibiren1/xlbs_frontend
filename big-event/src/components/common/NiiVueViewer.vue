@@ -7,13 +7,13 @@
   </el-upload>
 
   <div class="feature-section">
-    <h1>NiiVue Component</h1>
+    <h1>心脏NIFTI图像3D显示</h1>
 
     <!-- 按钮组 -->
     <div class="button-group">
-      <button @click="navigateTo('feature1')" class="styled-button">Go to Feature 1</button>
-      <button @click="navigateTo('feature2')" class="styled-button">Go to Feature 2</button>
-      <button @click="navigateTo('feature3')" class="styled-button">Go to Feature 3</button>
+      <button @click="navigateTo('feature1')" class="styled-button">功能一</button>
+      <button @click="navigateTo('feature2')" class="styled-button">功能二</button>
+      <button @click="navigateTo('feature3')" class="styled-button">功能三</button>
     </div>
 
     <!-- 子路由内容将显示在这里 -->
@@ -54,7 +54,7 @@ const handleChange = (file, fileList) => {
 const handleSuccess = (response, file, fileList) => {
   console.log('Upload Response:', response)  // 调试输出
   if (response.code === 0) {
-    imageStore.setniiImgUrl(response.data);
+    imageStore.setMaskniiImgUrl(response.data);
     console.log('niiImgList :', JSON.stringify(imageStore.niiImgList));
 
   } else {
@@ -104,7 +104,8 @@ const handleError = (err, file, fileList) => {
 }
 
 h1 {
-  font-size: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 32px;
   margin-bottom: 10px;
   color: #333;
 }

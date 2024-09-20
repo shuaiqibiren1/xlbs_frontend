@@ -22,7 +22,7 @@ import usePatientsInfoStore from '@/stores/patients.js'
 
 // # 变量声明
 const toolButton = ref(false);
-const hoverEnter = ref(false);
+const hoverEnter = ref(true);
 const isDark = ref(false);         // 控制黑天白天的显示效果 
 const scrollTop = ref(false);
 const toolbarDrawer = ref(false);
@@ -156,23 +156,6 @@ watch(scrollTop, (newScrollTop, oldScrollTop) => {
   let isShow = newScrollTop - window.innerHeight > 30;
   toolButton.value = isShow;
 
-  // // 动态调整 css 样式
-  // const cdTopElement = document.querySelector('.cd-top');
-
-  // if (cdTopElement) {
-  //   if (isShow) {
-  //     if (window.innerHeight > 950) {
-  //       cdTopElement.style.top = '0';
-  //     } else {
-  //       cdTopElement.style.top = `${window.innerHeight - 950}px`;
-  //     }
-  //   } else {
-  //     cdTopElement.style.top = '-900px';
-  //   }
-  // } else {
-  //   console.warn("Element with class 'cd-top' not found.");
-  // }
-
   // 导航栏显示与颜色
   let toolbarStatus = {
     enter: enter,
@@ -259,18 +242,15 @@ const openNewPage = () => {
     <!-- el过渡动画 -->
     <transition name="el-fade-in-linear">
       <!-- 导航栏 -->
-      <div v-show="toolbar.visible"
+      <!-- <div v-show="toolbar.visible" 
            @mouseenter="hoverEnter = true"
-           @mouseleave="hoverEnter = false"
+           @mouseleave="hoverEnter = false"-->
+       <div
            :class="[{ enter: toolbar.enter }, { hoverEnter:  hoverEnter && !toolbar.enter }]"
-           class="toolbar-content myBetween">
-        <!-- 事件监听器，当鼠标进入和离开 <div> 元素时，会分别将 hoverEnter 变量设置为 true 和 false。
-        hoverEnter 是一个响应式变量，用于跟踪鼠标是否悬停在元素上。 -->
-        <!-- :class=" ... " 动态类绑定 -->
-        <!-- class="toolbar-content myBetween"这些是静态类，始终会应用于这个 <div> 元素。
-        无论动态类是否被应用，toolbar-content 和 myBetween 类都会存在。网站名称 -->
-        <div class="toolbar-title">
-          <h2 @click="router.push({path: '/login'})"> Aircraft </h2>
+           class="toolbar-content myBetween ">
+        <div class="toolbar-title">  
+          <!-- <img src="@/assets/logoss.png" class="logo">   -->
+          <img src="@/assets/logosss.png" @click="router.push({path: '/login'})" alt="Logo" class="logo" >  
         </div>
 
         <!-- 导航列表 -->
@@ -382,12 +362,11 @@ const openNewPage = () => {
     width: 100%;
     height: 60px;
     color: var(--white);
-    /* 固定位置，不随滚动条滚动 */
     position: fixed;
     z-index: 100;
-    /* 禁止选中文字 */
     user-select: none;
     transition: all 0.3s ease-in-out;
+    box-shadow: 0 15px 15px rgba(50, 50, 50, 0.7);  
   }
 
   .toolbar-content.enter {
@@ -401,10 +380,18 @@ const openNewPage = () => {
     box-shadow: 0 1px 3px 0 rgba(0, 34, 77, 0.05);
   }
 
-  .toolbar-title {
-    margin-left: 30px;
-    cursor: pointer;
-  }
+.toolbar-title {  
+  margin-left: 30px;  
+  cursor: pointer;  
+  display: flex; /* 使用 flexbox 使图像并列 */  
+  align-items: center; /* 垂直居中对齐 */  
+}  
+
+.logo {  
+  width: 200px;
+  height: auto;   
+  margin-right: 5px; 
+}
 
   .toolbar-mobile-menu {
     font-size: 30px;
@@ -431,6 +418,7 @@ const openNewPage = () => {
 
   .scroll-menu li:hover .my-menu span {
     color: var(--themeBackground);
+    
   }
 
   .scroll-menu li:hover .my-menu i {

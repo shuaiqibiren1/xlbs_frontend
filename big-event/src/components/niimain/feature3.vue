@@ -1,13 +1,8 @@
 <template>
   <div class="content">
     <h1>
-      NiiVue supports multiuser image option syncing between publishers and
-      subscribers. Clone and run the
-      <a href="https://github.com/niivue/niivue-server" target="_blank">niivue-server</a>
-      to allow this to work. Open two instances of this page to see multiuser
-      synchronization.
+      可用于展示多模态全心脏切割后的效果
     </h1>
-    <p>Click the buttons to change the color map</p>
     <div class="slidecontainer">
       <label>Opacity</label>
       <input
@@ -101,10 +96,11 @@ onMounted(async () => {
   border-radius: 10px;
 }
 
-h1 {
-  font-size: 1.5em;
-  /*color: #333; */
-  margin-bottom: 10px;
+h1 {  
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
+  font-size: 1.5em;  
+  color: #777; /* 更灰的颜色 */  
+  margin-bottom: 10px;  
 }
 
 a {

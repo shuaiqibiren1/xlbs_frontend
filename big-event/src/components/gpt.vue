@@ -99,7 +99,7 @@ import myFooter from '@/components/common/myFooter.vue';
 import loader from '@/components/common/loader.vue';
 import zombie from '@/components/common/zombie.vue';
 import myAside from '@/components/myAside.vue';
-import bgImage from '@/assets/bgimg.png';
+import bgImage from '@/assets/bgimg6.png';
 import AvatarUploader from '@/components/common/AvatarUploader.vue';
 import UserInfoForm from '@/components/common/UserInfoForm.vue';
 import ImageDisplay from '@/components/common/ImageDisplay.vue';
@@ -115,11 +115,11 @@ const store = useStore();
 const visible = computed(() => store.state.visible);
 
 // 模拟 webTitle 数据
-const webTitle = ref('Demo'.split(''));
+const webTitle = ref('心灵捕手——在乎每颗心'.split(''));
 
 // printerInfo 数据
 const printerInfo = ref({
-  content: 'This is a sample content'
+  content: '文心Ernie Bot自动生成心脏病例报告'
 });
 
 // 函数：检查 URL 并更新 asideshow.user
@@ -278,25 +278,27 @@ onMounted(() => {
     width: 70%;
   }
 
-  .announcement {
-    padding: 22px;
-    border: 1px dashed var(--lightGray);
-    color: var(--greyFont);
-    border-radius: 10px;
-    display: flex;
-    margin: 40px auto 40px;
-  }
+  .announcement {  
+      padding: 22px;  
+      border: 1px dashed var(--lightGray);  
+      color: var(--greyFont);  
+      border-radius: 10px;  
+      display: flex;  
+      margin: 40px auto;  
+      align-items: center;  
+      justify-content: center; /* 使内容在主轴上居中 */  
+  }  
 
-  .announcement i {
-    color: var(--themeBackground);
-    font-size: 22px;
-    margin: auto 0;
-    animation: scale 0.8s ease-in-out infinite;
-  }
+  .announcement i {  
+      color: var(--themeBackground);  
+      font-size: 22px;  
+      margin-right: 20px; /* 右边留出空间 */  
+      animation: scale 0.8s ease-in-out infinite;  
+  }  
 
-  .announcement div div {
-    margin-left: 20px;
-    line-height: 30px;
+  .announcement div {  
+      line-height: 30px;  
+      text-align: center; /* 使文本在div中居中 */  
   }
 
   .aside-content {

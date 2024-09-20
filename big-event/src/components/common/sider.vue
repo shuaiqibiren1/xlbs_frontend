@@ -89,13 +89,12 @@
 import { ref, reactive, onMounted, computed, watch } from 'vue';
 import useDocStore from '@/stores/document.js';
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
-import image1 from '@/assets/10-240H6151512.jpg';
-import image2 from '@/assets/iu.png';
 import useFilesInfoStore from '@/stores/files.js';
 import { ElMessage } from 'element-plus'
 import useImageStore from '@/stores/images.js';
 const imageStore = useImageStore();
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const filesInfoStore = useFilesInfoStore();
 const filesInfo = computed(() => filesInfoStore.infos);
 
@@ -120,11 +119,22 @@ const ChooseImage = (niiurl) => {
   imageStore.setniiImgUrl(niiurl);
   console.log(imageStore.niiImgUrl)
   ElMessage.success("修改成功")
+
+  // 获取当前路由路径  
+  const currentPath = route.path;  
+  console.log("currentPath : ", currentPath);  
+
+  // 只在特定路由下刷新页面  
+  if (currentPath === '/display/feature1' ||   
+      currentPath === '/display/feature2' ||   
+      currentPath === '/display/feature3') {  
+    window.location.reload();   
+  } 
 }
 
 onMounted(() => {
   position.x = (window.innerWidth / 2) - 60;
-  position.y = 100;
+  position.y = 600;
 });
 
 const toggleGallery = (mode) => {
@@ -174,12 +184,27 @@ const currentImageIndex = ref(0);
 
 const route = useRoute();
 
+import zhushou from '@/assets/zhidao/zhushou.png'
+import homedoctor from '@/assets/zhidao/homedoctor.png'
+import wenjian from '@/assets/zhidao/wenjian.png'
+import demotool from '@/assets/zhidao/demotool.png'
+import Dshow3 from '@/assets/zhidao/3Dshow3.png'
+import Dshow2 from '@/assets/zhidao/3Dshow2.png'
+import baogao from '@/assets/zhidao/baogao.png'
+
+
 const images = computed(() => {
   switch (route.path) {
     case '/demo':
-      return [image1, image2];
+      return [zhushou,demotool];
     case '/home':
-      return [image1, image2];
+      return [homedoctor,wenjian];
+    case '/display/feature3':
+      return [Dshow3];
+    case '/display/feature2':
+      return [Dshow2];
+    case '/chat':
+      return [baogao];
     default:
       return [];
   }
@@ -210,7 +235,7 @@ const nextImage = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 90%px; /* 固定宽度 */
+  width: 100%; /* 固定宽度 */
   height: 300px; /* 固定高度 */
   overflow: auto; /* 超出内容时显示滚动条 */
 }

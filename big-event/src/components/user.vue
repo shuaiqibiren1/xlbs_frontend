@@ -54,9 +54,9 @@ App.vue
             <div class="recent-posts">
               <div class="announcement background-opacity">
                 <i class="fa fa-volume-up" aria-hidden="true"></i>
-                <div>
-                    医生患者交互平台，医生可以为患者添加nii图像，以及评语
-                </div>
+                  <div>  
+                    医生患者交互平台，医生可以为患者添加nii图像，以及评语  
+                  </div> 
               </div>
 
             <div style="padding: 0 20px">
@@ -179,13 +179,13 @@ App.vue
               <el-input v-model="item.sex" placeholder="性别" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="item.cp" placeholder="胸部疼痛类型" class="input-item"></el-input>
+              <el-input v-model="item.cp" placeholder="总胆固醇" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="item.trestbps" placeholder="血压" class="input-item"></el-input>
+              <el-input v-model="item.trestbps" placeholder="动脉血压测定" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="item.chol" placeholder="胆固醇" class="input-item"></el-input>
+              <el-input v-model="item.chol" placeholder="静脉压测定" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
               <el-input v-model="item.fbs" placeholder="空腹血糖" class="input-item"></el-input>
@@ -194,19 +194,19 @@ App.vue
               <el-input v-model="item.restecg" placeholder="心电图结果" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="item.thalach" placeholder="最大心跳数" class="input-item"></el-input>
+              <el-input v-model="item.thalach" placeholder="心率" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
               <el-input v-model="item.exang" placeholder="运动时是否心绞痛" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="item.oldpeak" placeholder="ST depression" class="input-item"></el-input>
+              <el-input v-model="item.oldpeak" placeholder="左心房体积" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="item.ca" placeholder="透视检查看到的血管数" class="input-item"></el-input>
+              <el-input v-model="item.ca" placeholder="左心室射血分数" class="input-item"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="item.thal" placeholder="缺陷种类" class="input-item"></el-input>
+              <el-input v-model="item.thal" placeholder="心肌疤痕/左心房体积比" class="input-item"></el-input>
             </el-col>
           </el-row>
           <el-button type="primary" @click="completeEdit(item)">修改完成</el-button>
@@ -239,7 +239,7 @@ import myFooter from '@/components/common/myFooter.vue';
 import loader from '@/components/common/loader.vue';
 import zombie from '@/components/common/zombie.vue';
 import myAside from '@/components/myAside.vue';
-import bgImage from '@/assets/bgimg.png';
+import bgImage from '@/assets/bgimg5.jpg';
 import AvatarUploader from '@/components/common/AvatarUploader.vue';
 import UserInfoForm from '@/components/common/UserInfoForm.vue';
 import ImageDisplay from '@/components/common/ImageDisplay.vue';
@@ -325,11 +325,11 @@ const uploadUrl = computed(() => {
 // dialog over
 
 // 模拟 webTitle 数据
-const webTitle = ref('Demo'.split(''));
+const webTitle = ref('心灵捕手——在乎每颗心'.split(''));
 
 // printerInfo 数据
 const printerInfo = ref({
-  content: 'This is a sample content'
+  content: '多模态与单样本双方法切割全心脏，paddleseg-vnet检测心肌瘢痕'
 });
 
 // 控制弹窗的显示状态
@@ -377,6 +377,9 @@ const loadfilesInfo = () => {
 const submitUpload = () => {
   // 这里可以添加提交上传的逻辑
   showDialog.value = false;
+  setTimeout(() => {  
+    window.location.reload();  
+  }, 1000); 
 };
 
 // 在组件挂载时调用函数
@@ -716,25 +719,27 @@ async function handleResourceClick(id) {
     width: 70%;
   }
 
-  .announcement {
-    padding: 22px;
-    border: 1px dashed var(--lightGray);
-    color: var(--greyFont);
-    border-radius: 10px;
-    display: flex;
-    margin: 40px auto 40px;
-  }
+  .announcement {  
+      padding: 22px;  
+      border: 1px dashed var(--lightGray);  
+      color: var(--greyFont);  
+      border-radius: 10px;  
+      display: flex;  
+      margin: 40px auto;  
+      align-items: center;  
+      justify-content: center; /* 使内容在主轴上居中 */  
+  }  
 
-  .announcement i {
-    color: var(--themeBackground);
-    font-size: 22px;
-    margin: auto 0;
-    animation: scale 0.8s ease-in-out infinite;
-  }
+  .announcement i {  
+      color: var(--themeBackground);  
+      font-size: 22px;  
+      margin-right: 20px; /* 右边留出空间 */  
+      animation: scale 0.8s ease-in-out infinite;  
+  }  
 
-  .announcement div div {
-    margin-left: 20px;
-    line-height: 30px;
+  .announcement div {  
+      line-height: 30px;  
+      text-align: center; /* 使文本在div中居中 */  
   }
 
   .aside-content {

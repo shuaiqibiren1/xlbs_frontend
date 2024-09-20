@@ -26,7 +26,7 @@
     /* 导航栏字体 */
     --toolbarFont: #333333;
     /* 导航栏背景 */
-    --toolbarBackground: rgba(255, 255, 255, 1);
+    --toolbarBackground: rgba(173, 216, 230, 0.5);
     /* 灰色字体 */
     --greyFont: #797979;
     --maxGreyFont: #595A5A;

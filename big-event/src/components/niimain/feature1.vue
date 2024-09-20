@@ -1,31 +1,34 @@
 <template>
   <div class="content">
+    <h1>
+      可用于展示心脏和疤痕切割后的效果
+    </h1>
     <!-- Header 部分 -->
     <header class="header">
       <div class="controls">
         <select v-model="sliceType" @change="setSliceType">
-          <option value="4">Render</option>
+          <option value="4">3D全局渲染</option>
           <option value="3">A+C+S+R</option>
         </select>
-        <button @click="saveAsHtml">Save as HTML</button>
-        <button @click="savePhoto">Save as Png</button>
+        <button @click="saveAsHtml">保存为HTML</button>
+        <button @click="savePhoto">保存为图片</button>
       </div>
       <div class="checkbox-group">
-        <label for="check1">Background</label>
+        <label for="check1">背景</label>
         <input
           type="checkbox"
           id="check1"
           v-model="backgroundChecked"
           @click="updateBackground"
         />
-        <label for="check2">Mask</label>
+        <label for="check2">标签</label>
         <input
           type="checkbox"
           id="check2"
           v-model="maskChecked"
           @click="updateMask"
         />
-        <label for="check3">Smooth</label>
+        <label for="check3">平滑</label>
         <input
           type="checkbox"
           id="check3"
@@ -34,7 +37,7 @@
         />
       </div>
       <div class="opacity-slider">
-        <label for="alphaSlider">Opacity</label>
+        <label for="alphaSlider">透明度</label>
         <input
           type="range"
           min="1"
@@ -150,7 +153,7 @@ onMounted(async () => {
       colormap: "red",
     },
     {
-      url: imageStore.niiImgUrl,
+      url: imageStore.maskNiiImageUrl,
       colormap: "green",
       opacity: 0.5,
     },
@@ -226,6 +229,13 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+h1 {  
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
+  font-size: 1.5em;  
+  color: #777; /* 更灰的颜色 */  
+  margin-bottom: 10px;  
 }
 
 .footer {
