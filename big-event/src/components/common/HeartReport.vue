@@ -74,6 +74,7 @@
             <td>{{ docStore.heartParameters.thal}}</td>
             <td>&lt;5%</td>
           </tr>
+
         </tbody>
       </table>
 
@@ -215,7 +216,8 @@ ul {
   font-weight: bold;
   color: #0073e6; /* 添加颜色样式 */
   font-size: 18px;
-  margin-top: 15px;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 
 .image-gallery {

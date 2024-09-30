@@ -22,7 +22,7 @@ const props = defineProps({
   }
 });
 
-const footerText = ref('©2024 Harbin institute of technology.ZhangWeiHao,ZhengShuHang and LinZiJian. All rights reserved. ');
+const footerText = ref('©2024 Harbin institute of technology.ZhengShuHang, ZhangWeiHao and LinZiJian. All rights reserved.');
 const beian = ref('1111');
 </script>
 

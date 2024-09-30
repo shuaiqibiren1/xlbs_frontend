@@ -188,7 +188,7 @@ const cards = [
   },
   {
     id: 3,
-    title: '单样本切割',
+    title: '基于配准的分割',
     icon: EliIcon, // Use the imported image
     description: "Registration-based Single Sample Segmentation of Cardiac NII Images.",
     buttons: [

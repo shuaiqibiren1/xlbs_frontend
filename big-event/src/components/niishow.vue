@@ -87,7 +87,7 @@ const webTitle = ref('心灵捕手——在乎每颗心'.split(''));
 
 // printerInfo 数据
 const printerInfo = ref({
-  content: '多模态与单样本双方法切割全心脏，paddleseg-vnet检测心肌瘢痕'
+  content: '多模态与单样本双方法切割全心脏，MedicalSeg-Vnet检测心肌瘢痕'
 });
 
 // 函数：检查 URL 并更新 asideshow.user
